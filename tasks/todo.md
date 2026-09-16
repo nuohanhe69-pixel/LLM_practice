@@ -62,11 +62,11 @@
 ## Task 6: Documentation
 
 **Acceptance criteria:**
-- [ ] README contains setup and execution commands.
-- [ ] `docs/implementation_report.md` contains every requested topic without background padding.
+- [x] README contains setup and execution commands.
+- [x] `docs/implementation_report.md` contains every requested topic without background padding.
 
 **Verification:**
-- [ ] Commands and paths in documentation match the code.
+- [x] Commands and paths in documentation match the code.
 
 **Dependencies:** Task 5
 

@@ -26,12 +26,12 @@
 ## Task 3: Resumable prediction
 
 **Acceptance criteria:**
-- [ ] OpenAI-compatible calls use configured model, endpoint, timeout, retry count, and temperature.
-- [ ] Raw output, normalized prediction, API status/error, and latency are saved.
-- [ ] Existing finalized rows are skipped and never overwritten.
+- [x] OpenAI-compatible calls use configured model, endpoint, timeout, retry count, and temperature.
+- [x] Raw output, normalized prediction, API status/error, and latency are saved.
+- [x] Existing finalized rows are skipped and never overwritten.
 
 **Verification:**
-- [ ] Focused prediction tests pass without network access.
+- [x] Focused prediction tests pass without network access.
 
 **Dependencies:** Tasks 1-2
 

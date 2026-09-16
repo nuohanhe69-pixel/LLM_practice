@@ -4,13 +4,17 @@ import os
 from collections.abc import Mapping
 from typing import Any
 
-from openai import OpenAI
+from openai import APIError, OpenAI
 
 from llm_experiment.config import ModelConfig
 
 
 class ProviderConfigurationError(ValueError):
     """Raised when the provider cannot be initialized safely."""
+
+
+class ProviderRequestError(RuntimeError):
+    """Raised when an expected provider request failure exhausts SDK retries."""
 
 
 class OpenAICompatibleClient:
@@ -21,12 +25,15 @@ class OpenAICompatibleClient:
         self._sdk_client = sdk_client
 
     def complete(self, prompt: str) -> str:
-        response = self._sdk_client.chat.completions.create(
-            model=self._config.api_model,
-            messages=[{"role": "user", "content": prompt}],
-            temperature=self._config.temperature,
-            max_tokens=self._config.max_tokens,
-        )
+        try:
+            response = self._sdk_client.chat.completions.create(
+                model=self._config.api_model,
+                messages=[{"role": "user", "content": prompt}],
+                temperature=self._config.temperature,
+                max_tokens=self._config.max_tokens,
+            )
+        except (APIError, TimeoutError, ConnectionError) as exc:
+            raise ProviderRequestError(f"{type(exc).__name__}: {exc}") from exc
         content = response.choices[0].message.content
         return content if isinstance(content, str) else ""
 

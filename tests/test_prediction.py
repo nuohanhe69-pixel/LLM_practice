@@ -3,6 +3,9 @@ from __future__ import annotations
 import csv
 from collections import deque
 
+import pytest
+
+from llm_experiment.api_client import ProviderRequestError
 from llm_experiment.config import ModelConfig
 from llm_experiment.constants import API_STATUS_FAILURE, API_STATUS_SUCCESS, INVALID_OUTPUT
 from llm_experiment.dataset import load_dataset
@@ -47,7 +50,9 @@ def test_normalize_prediction_only_strips_whitespace_newlines_and_changes_case()
 def test_run_predictions_distinguishes_invalid_output_from_api_failure(tmp_path):
     bundle = load_dataset(write_protocol_dataset(tmp_path / "dataset_v1.csv"))
     predictions_path = tmp_path / "predictions.csv"
-    client = SequenceClient(["network_api\n", "not-a-label", TimeoutError("timed out")])
+    client = SequenceClient(
+        ["network_api\n", "not-a-label", ProviderRequestError("TimeoutError: timed out")]
+    )
 
     records = run_predictions(
         samples=bundle.tests[:3],
@@ -68,7 +73,7 @@ def test_run_predictions_distinguishes_invalid_output_from_api_failure(tmp_path)
     assert [record.prediction for record in records] == ["NETWORK_API", INVALID_OUTPUT, ""]
     assert records[0].raw_output == "network_api\n"
     assert records[2].raw_output == ""
-    assert "TimeoutError: timed out" in records[2].api_error
+    assert records[2].api_error == "ProviderRequestError: TimeoutError: timed out"
     assert all(record.latency_seconds >= 0 for record in records)
 
     with predictions_path.open(encoding="utf-8", newline="") as handle:
@@ -115,7 +120,9 @@ def test_resume_skips_successful_rows_without_overwriting_them(tmp_path):
 def test_resume_retries_api_failure_and_replaces_it_without_duplicate_ids(tmp_path):
     bundle = load_dataset(write_protocol_dataset(tmp_path / "dataset_v1.csv"))
     predictions_path = tmp_path / "predictions.csv"
-    first_client = SequenceClient([TimeoutError("temporary outage"), "not-a-label", "NETWORK_API"])
+    first_client = SequenceClient(
+        [ProviderRequestError("TimeoutError: temporary outage"), "not-a-label", "NETWORK_API"]
+    )
     first_records = run_predictions(
         samples=bundle.tests[:3],
         demos=bundle.demos,
@@ -157,3 +164,23 @@ def test_resume_retries_api_failure_and_replaces_it_without_duplicate_ids(tmp_pa
         saved = list(csv.DictReader(handle))
     assert [row["sample_id"] for row in saved] == ["T001", "T002", "T003"]
     assert sum(row["sample_id"] == "T001" for row in saved) == 1
+
+
+def test_run_predictions_propagates_unexpected_program_error_without_checkpoint(tmp_path):
+    bundle = load_dataset(write_protocol_dataset(tmp_path / "dataset_v1.csv"))
+    predictions_path = tmp_path / "predictions.csv"
+    client = SequenceClient([RuntimeError("program bug")])
+
+    with pytest.raises(RuntimeError, match="program bug"):
+        run_predictions(
+            samples=bundle.tests[:1],
+            demos=bundle.demos,
+            model_config=model_config(),
+            prompt_type="zero_shot",
+            run_id=1,
+            predictions_path=predictions_path,
+            prompt_dir="prompts",
+            client=client,
+        )
+
+    assert not predictions_path.exists()

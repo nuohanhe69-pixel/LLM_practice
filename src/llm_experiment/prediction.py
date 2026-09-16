@@ -9,6 +9,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Protocol
 
+from llm_experiment.api_client import ProviderRequestError
 from llm_experiment.config import ModelConfig
 from llm_experiment.constants import (
     ALLOWED_LABELS,
@@ -118,7 +119,7 @@ def run_predictions(
                 api_error="",
                 latency_seconds=time.perf_counter() - started_at,
             )
-        except Exception as exc:  # The provider boundary may raise SDK or transport errors.
+        except ProviderRequestError as exc:
             record = PredictionRecord(
                 sample_id=sample.id,
                 model=model_config.name,

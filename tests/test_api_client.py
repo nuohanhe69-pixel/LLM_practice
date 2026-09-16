@@ -3,10 +3,12 @@ from __future__ import annotations
 from types import SimpleNamespace
 
 import pytest
+from openai import APITimeoutError
 
 from llm_experiment.api_client import (
     OpenAICompatibleClient,
     ProviderConfigurationError,
+    ProviderRequestError,
     build_openai_client,
 )
 from llm_experiment.config import ModelConfig
@@ -72,3 +74,27 @@ def test_openai_compatible_client_sends_configured_generation_parameters():
         "temperature": 0.0,
         "max_tokens": 8,
     }
+
+
+def test_openai_compatible_client_wraps_provider_timeout():
+    class FakeCompletions:
+        def create(self, **kwargs):
+            raise APITimeoutError(request=None)
+
+    sdk_client = SimpleNamespace(chat=SimpleNamespace(completions=FakeCompletions()))
+    client = OpenAICompatibleClient(model_config(), sdk_client)
+
+    with pytest.raises(ProviderRequestError, match="APITimeoutError: Request timed out"):
+        client.complete("classify this")
+
+
+def test_openai_compatible_client_propagates_unexpected_program_error():
+    class FakeCompletions:
+        def create(self, **kwargs):
+            raise RuntimeError("program bug")
+
+    sdk_client = SimpleNamespace(chat=SimpleNamespace(completions=FakeCompletions()))
+    client = OpenAICompatibleClient(model_config(), sdk_client)
+
+    with pytest.raises(RuntimeError, match="program bug"):
+        client.complete("classify this")

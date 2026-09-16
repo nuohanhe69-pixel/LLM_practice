@@ -14,12 +14,12 @@
 ## Task 2: Prompt rendering and isolation
 
 **Acceptance criteria:**
-- [ ] Zero-shot and few-shot templates are external files.
-- [ ] Test-row label, reason, source type, and source reference cannot enter prompt rendering.
-- [ ] Few-shot contains exactly eight demo examples.
+- [x] Zero-shot and few-shot templates are external files.
+- [x] Test-row label, reason, source type, and source reference cannot enter prompt rendering.
+- [x] Few-shot contains exactly eight demo examples.
 
 **Verification:**
-- [ ] Focused prompt tests pass.
+- [x] Focused prompt tests pass.
 
 **Dependencies:** Task 1
 

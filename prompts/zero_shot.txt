@@ -1,0 +1,8 @@
+你是错误类型分类器。请严格依据下面的标签定义进行分类。
+
+{label_definitions}
+
+待分类错误：
+{error_text}
+
+只输出一个标签，不要解释。合法标签：NETWORK_API、CONTEXT_LIMIT、ENV_DEPENDENCY、CODE_RUNTIME。

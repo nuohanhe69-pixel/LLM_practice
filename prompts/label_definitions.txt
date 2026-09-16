@@ -1,0 +1,4 @@
+NETWORK_API：网络连接、DNS、HTTP/API 请求、鉴权、限流或远端服务可用性问题。
+CONTEXT_LIMIT：上下文窗口、Token 数量、输入长度或模型容量限制问题。
+ENV_DEPENDENCY：运行环境、配置、依赖包、模块、版本、设备、权限或安装问题。
+CODE_RUNTIME：代码语法、类型、取值、索引、逻辑或执行期异常，且不属于以上类别。

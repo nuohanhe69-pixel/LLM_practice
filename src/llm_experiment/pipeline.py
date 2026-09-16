@@ -5,7 +5,7 @@ from pathlib import Path
 
 from llm_experiment.api_client import build_openai_client
 from llm_experiment.config import SAFE_NAME_PATTERN, load_model_config
-from llm_experiment.dataset import load_dataset
+from llm_experiment.dataset import load_frozen_dataset
 from llm_experiment.evaluation import evaluate_predictions
 from llm_experiment.prediction import CompletionClient, run_predictions
 from llm_experiment.prompts import PROMPT_FILES
@@ -33,7 +33,7 @@ def run_experiment(
     client: CompletionClient | None = None,
 ) -> ExperimentResult:
     model_config = load_model_config(model_config_path, model_name)
-    bundle = load_dataset(dataset_path)
+    bundle = load_frozen_dataset(dataset_path)
     if prompt_type not in PROMPT_FILES:
         raise ValueError(f"Unsupported prompt type: {prompt_type!r}")
     if run_id < 1:

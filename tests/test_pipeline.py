@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 
 from llm_experiment.pipeline import resolve_result_directory, run_experiment
-from tests.helpers import write_protocol_dataset
 from tests.test_prediction import SequenceClient
 
 
@@ -30,7 +30,7 @@ def write_model_config(path):
 
 
 def test_smoke_run_uses_full_pipeline_and_isolated_result_directory(tmp_path):
-    dataset_path = write_protocol_dataset(tmp_path / "dataset_v1.csv")
+    dataset_path = Path("dataset_v1.csv")
     config_path = write_model_config(tmp_path / "models.json")
     results_root = tmp_path / "results"
     client = SequenceClient(["CODE_RUNTIME", "CONTEXT_LIMIT", "invalid"])

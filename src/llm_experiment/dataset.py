@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import csv
+import hashlib
+import json
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -10,6 +12,8 @@ from llm_experiment.constants import (
     EXPECTED_DEMO_COUNT,
     EXPECTED_TEST_COUNT,
 )
+
+FROZEN_DATASET_SHA256 = "1ca0bc48996cd5ee596b066161f4baa0d7c8e9dea5688bdfa7c5d542db6f8961"
 
 
 class DatasetValidationError(ValueError):
@@ -33,6 +37,28 @@ class TestSample:
 class DatasetBundle:
     demos: tuple[DemoSample, ...]
     tests: tuple[TestSample, ...]
+
+
+def dataset_fingerprint(path: str | Path) -> str:
+    dataset_path = Path(path)
+    try:
+        with dataset_path.open("r", encoding="utf-8-sig", newline="") as handle:
+            rows = list(csv.reader(handle))
+    except (OSError, UnicodeError, csv.Error) as exc:
+        raise DatasetValidationError(f"Cannot fingerprint dataset: {dataset_path}") from exc
+
+    canonical_content = json.dumps(rows, ensure_ascii=False, separators=(",", ":"))
+    return hashlib.sha256(canonical_content.encode("utf-8")).hexdigest()
+
+
+def load_frozen_dataset(path: str | Path) -> DatasetBundle:
+    actual_fingerprint = dataset_fingerprint(path)
+    if actual_fingerprint != FROZEN_DATASET_SHA256:
+        raise DatasetValidationError(
+            "Frozen dataset fingerprint mismatch: "
+            f"expected {FROZEN_DATASET_SHA256}, got {actual_fingerprint}"
+        )
+    return load_dataset(path)
 
 
 def load_dataset(path: str | Path) -> DatasetBundle:

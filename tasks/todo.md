@@ -50,12 +50,12 @@
 ## Task 5: Unified orchestration
 
 **Acceptance criteria:**
-- [ ] One CLI runs prediction then evaluation.
-- [ ] `--limit` uses the identical pipeline and isolated output directory.
-- [ ] A local fake-client integration test produces all three artifacts.
+- [x] One CLI runs prediction then evaluation.
+- [x] `--limit` uses the identical pipeline and isolated output directory.
+- [x] A local fake-client integration test produces all three artifacts.
 
 **Verification:**
-- [ ] Integration test and CLI help pass.
+- [x] Integration test and CLI help pass.
 
 **Dependencies:** Tasks 3-4
 

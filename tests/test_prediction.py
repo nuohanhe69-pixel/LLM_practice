@@ -5,7 +5,7 @@ from collections import deque
 
 import pytest
 
-from llm_experiment.api_client import ProviderRequestError
+from llm_experiment.api_client import ProviderFatalError, ProviderRequestError
 from llm_experiment.config import ModelConfig
 from llm_experiment.constants import API_STATUS_FAILURE, API_STATUS_SUCCESS, INVALID_OUTPUT
 from llm_experiment.dataset import load_dataset
@@ -51,7 +51,7 @@ def test_run_predictions_distinguishes_invalid_output_from_api_failure(tmp_path)
     bundle = load_dataset(write_protocol_dataset(tmp_path / "dataset_v1.csv"))
     predictions_path = tmp_path / "predictions.csv"
     client = SequenceClient(
-        ["network_api\n", "not-a-label", ProviderRequestError("TimeoutError: timed out")]
+        [ProviderRequestError("TimeoutError: timed out"), "network_api\n", "not-a-label"]
     )
 
     records = run_predictions(
@@ -66,21 +66,21 @@ def test_run_predictions_distinguishes_invalid_output_from_api_failure(tmp_path)
     )
 
     assert [record.api_status for record in records] == [
-        API_STATUS_SUCCESS,
-        API_STATUS_SUCCESS,
         API_STATUS_FAILURE,
+        API_STATUS_SUCCESS,
+        API_STATUS_SUCCESS,
     ]
-    assert [record.prediction for record in records] == ["NETWORK_API", INVALID_OUTPUT, ""]
-    assert records[0].raw_output == "network_api\n"
-    assert records[2].raw_output == ""
-    assert records[2].api_error == "ProviderRequestError: TimeoutError: timed out"
+    assert [record.prediction for record in records] == ["", "NETWORK_API", INVALID_OUTPUT]
+    assert records[0].raw_output == ""
+    assert records[0].api_error == "ProviderRequestError: TimeoutError: timed out"
+    assert records[1].raw_output == "network_api\n"
     assert all(record.latency_seconds >= 0 for record in records)
 
     with predictions_path.open(encoding="utf-8", newline="") as handle:
         saved = list(csv.DictReader(handle))
     assert [row["sample_id"] for row in saved] == ["T001", "T002", "T003"]
-    assert saved[1]["prediction"] == INVALID_OUTPUT
-    assert saved[2]["api_status"] == API_STATUS_FAILURE
+    assert saved[0]["api_status"] == API_STATUS_FAILURE
+    assert saved[2]["prediction"] == INVALID_OUTPUT
 
 
 def test_resume_skips_successful_rows_without_overwriting_them(tmp_path):
@@ -183,4 +183,26 @@ def test_run_predictions_propagates_unexpected_program_error_without_checkpoint(
             client=client,
         )
 
+    assert not predictions_path.exists()
+
+
+@pytest.mark.parametrize("status_code", [400, 401, 404])
+def test_run_predictions_stops_on_fatal_provider_error(status_code, tmp_path):
+    bundle = load_dataset(write_protocol_dataset(tmp_path / "dataset_v1.csv"))
+    predictions_path = tmp_path / "predictions.csv"
+    client = SequenceClient([ProviderFatalError(f"HTTP {status_code}"), "NETWORK_API"])
+
+    with pytest.raises(ProviderFatalError, match=f"HTTP {status_code}"):
+        run_predictions(
+            samples=bundle.tests[:2],
+            demos=bundle.demos,
+            model_config=model_config(),
+            prompt_type="zero_shot",
+            run_id=1,
+            predictions_path=predictions_path,
+            prompt_dir="prompts",
+            client=client,
+        )
+
+    assert len(client.prompts) == 1
     assert not predictions_path.exists()

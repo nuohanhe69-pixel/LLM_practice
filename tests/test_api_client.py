@@ -2,12 +2,14 @@ from __future__ import annotations
 
 from types import SimpleNamespace
 
+import httpx2
 import pytest
-from openai import APITimeoutError
+from openai import APIStatusError, APITimeoutError
 
 from llm_experiment.api_client import (
     OpenAICompatibleClient,
     ProviderConfigurationError,
+    ProviderFatalError,
     ProviderRequestError,
     build_openai_client,
 )
@@ -25,6 +27,12 @@ def model_config() -> ModelConfig:
         timeout_seconds=12.5,
         max_retries=2,
     )
+
+
+def api_status_error(status_code: int) -> APIStatusError:
+    request = httpx2.Request("POST", "https://example.invalid/v1/chat/completions")
+    response = httpx2.Response(status_code, request=request)
+    return APIStatusError(f"HTTP {status_code}", response=response, body=None)
 
 
 def test_build_openai_client_uses_configured_credentials_timeout_and_retries(monkeypatch):
@@ -85,6 +93,32 @@ def test_openai_compatible_client_wraps_provider_timeout():
     client = OpenAICompatibleClient(model_config(), sdk_client)
 
     with pytest.raises(ProviderRequestError, match="APITimeoutError: Request timed out"):
+        client.complete("classify this")
+
+
+@pytest.mark.parametrize("status_code", [408, 429, 500, 503])
+def test_openai_compatible_client_wraps_transient_status(status_code):
+    class FakeCompletions:
+        def create(self, **kwargs):
+            raise api_status_error(status_code)
+
+    sdk_client = SimpleNamespace(chat=SimpleNamespace(completions=FakeCompletions()))
+    client = OpenAICompatibleClient(model_config(), sdk_client)
+
+    with pytest.raises(ProviderRequestError, match=f"APIStatusError: HTTP {status_code}"):
+        client.complete("classify this")
+
+
+@pytest.mark.parametrize("status_code", [400, 401, 403, 404, 422])
+def test_openai_compatible_client_raises_fatal_status(status_code):
+    class FakeCompletions:
+        def create(self, **kwargs):
+            raise api_status_error(status_code)
+
+    sdk_client = SimpleNamespace(chat=SimpleNamespace(completions=FakeCompletions()))
+    client = OpenAICompatibleClient(model_config(), sdk_client)
+
+    with pytest.raises(ProviderFatalError, match=f"APIStatusError: HTTP {status_code}"):
         client.complete("classify this")
 
 

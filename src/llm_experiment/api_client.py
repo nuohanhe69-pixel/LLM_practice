@@ -4,7 +4,7 @@ import os
 from collections.abc import Mapping
 from typing import Any
 
-from openai import APIError, OpenAI
+from openai import APIConnectionError, APIError, APIStatusError, OpenAI
 
 from llm_experiment.config import ModelConfig
 
@@ -15,6 +15,10 @@ class ProviderConfigurationError(ValueError):
 
 class ProviderRequestError(RuntimeError):
     """Raised when an expected provider request failure exhausts SDK retries."""
+
+
+class ProviderFatalError(RuntimeError):
+    """Raised when a provider error cannot recover by moving to another sample."""
 
 
 class OpenAICompatibleClient:
@@ -32,7 +36,18 @@ class OpenAICompatibleClient:
                 temperature=self._config.temperature,
                 max_tokens=self._config.max_tokens,
             )
-        except (APIError, TimeoutError, ConnectionError) as exc:
+        except APIConnectionError as exc:
+            raise ProviderRequestError(f"{type(exc).__name__}: {exc}") from exc
+        except APIStatusError as exc:
+            error_type = (
+                ProviderRequestError
+                if exc.status_code in {408, 429} or 500 <= exc.status_code < 600
+                else ProviderFatalError
+            )
+            raise error_type(f"{type(exc).__name__}: {exc}") from exc
+        except APIError as exc:
+            raise ProviderFatalError(f"{type(exc).__name__}: {exc}") from exc
+        except (TimeoutError, ConnectionError) as exc:
             raise ProviderRequestError(f"{type(exc).__name__}: {exc}") from exc
         content = response.choices[0].message.content
         return content if isinstance(content, str) else ""

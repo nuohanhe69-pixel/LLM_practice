@@ -54,8 +54,8 @@ Implement the approved experiment protocol in four dependency-ordered slices: va
 | Interrupted CSV write corrupts resume state | High | Atomic temporary-file replacement after each row |
 | API outages get counted as model errors | High | Separate `api_status`, `api_error`, and denominator rules |
 | Smoke run overwrites a formal run | Medium | Dedicated `smoke_limit_<N>` directory |
-| Missing frozen dataset blocks real execution | Medium | Strict runtime error and fixture-only verification |
+| Accidental frozen dataset modification | High | Byte-for-byte import plus protocol and regression checks |
 
 ## Open Questions
 
-- None for implementation. The missing frozen dataset only blocks a real smoke/formal run.
+- None.

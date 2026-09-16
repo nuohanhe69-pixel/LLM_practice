@@ -11,7 +11,7 @@
 ├── tasks/                            # 规格实施计划与完成清单
 ├── tests/                            # 单元和本地集成测试
 ├── .env.example                     # 环境变量示例，不含密钥
-├── dataset_v1.csv                   # 冻结数据集；需由项目方原样提供
+├── dataset_v1.csv                   # 已 Review 并冻结的正式数据集
 ├── pyproject.toml                   # 依赖、测试与 lint 配置
 ├── run_experiment.py                # 统一运行入口
 └── results/                          # 运行时生成，Git 忽略
@@ -104,4 +104,4 @@ uv run python run_experiment.py \
 - 未运行 60 条正式实验、两个 Prompt × 两次重复或多个模型。
 - 未比较或人工统计模型结果。
 - 未生成课程报告。
-- 当前空仓库中没有项目方冻结的 `dataset_v1.csv`，因此真实 Smoke Test 尚未执行；测试使用独立生成 fixture，未代替或修改正式数据集。
+- 已原样补入项目方 Review 并冻结的 `dataset_v1.csv`；本次按 CR 要求仍未运行真实 Smoke Test。

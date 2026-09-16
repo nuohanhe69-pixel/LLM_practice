@@ -67,4 +67,4 @@ def normalize_prediction(raw_output: str) -> str:
 
 ## Open Questions
 
-- The frozen `dataset_v1.csv` is not present in the empty remote repository or local workspace. Implementation and fixture-based verification can complete, but a real smoke run must wait for that exact file.
+- None.

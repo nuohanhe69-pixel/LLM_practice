@@ -62,7 +62,12 @@ def main(argv: Sequence[str] | None = None) -> int:
     ) as exc:
         parser.error(str(exc))
 
-    print("Experiment completed.")
+    api_failures = result.metrics["api_failures"]
+    if api_failures:
+        print(f"Experiment incomplete: {api_failures} API failure(s) remain.")
+        print("Re-run the same command to retry failed samples.")
+    else:
+        print("Experiment completed.")
     print(f"predictions: {result.predictions_path.resolve()}")
     print(f"metrics: {result.metrics_path.resolve()}")
     print(f"error cases: {result.error_cases_path.resolve()}")

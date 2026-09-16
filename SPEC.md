@@ -59,8 +59,8 @@ def normalize_prediction(raw_output: str) -> str:
 - Zero-shot and few-shot use the same ordered test subset and few-shot uses exactly eight demo rows.
 - Only `id` and `error_text` from each test row can reach prediction/prompt code.
 - Outputs preserve raw model text and only normalize whitespace/newlines/case; all other malformed results become `INVALID_OUTPUT`.
-- Bounded SDK retry and timeout settings produce terminal `SUCCESS` or `API_FAILURE` rows with error details.
-- Restarting an experiment skips every sample already finalized in `predictions.csv` and never overwrites successful rows.
+- Bounded SDK retry and timeout settings produce `SUCCESS` or `API_FAILURE` rows with error details.
+- Restarting an experiment skips `SUCCESS` rows, retries `API_FAILURE` rows in place, and never overwrites successful rows or creates duplicate sample IDs.
 - Evaluation joins on `sample_id`, excludes API failures from accuracy denominators, counts invalid outputs as unsuccessful classifications, and writes all required artifacts.
 - Smoke outputs cannot overwrite formal outputs.
 - Documentation explains structure, data flow, isolation, resume behavior, model extension, and commands.

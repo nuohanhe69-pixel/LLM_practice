@@ -57,7 +57,7 @@ uv run python run_experiment.py \
   --run-id 1
 ```
 
-同一命令中断后可直接重启。已写入 `predictions.csv` 的样本会被跳过，不会再次调用或覆盖；每条 API 结果都会原子持久化。
+同一命令中断后可直接重启。已有 `SUCCESS` 记录（包括 `INVALID_OUTPUT`）会被跳过，不会再次调用或覆盖；`API_FAILURE` 会在恢复时重试，并在原位置更新为最新结果，不产生重复 `sample_id`。每条 API 结果都会原子持久化。
 
 每次完成后自动生成：
 

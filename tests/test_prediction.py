@@ -78,7 +78,7 @@ def test_run_predictions_distinguishes_invalid_output_from_api_failure(tmp_path)
     assert saved[2]["api_status"] == API_STATUS_FAILURE
 
 
-def test_resume_skips_finalized_rows_without_overwriting_them(tmp_path):
+def test_resume_skips_successful_rows_without_overwriting_them(tmp_path):
     bundle = load_dataset(write_protocol_dataset(tmp_path / "dataset_v1.csv"))
     predictions_path = tmp_path / "predictions.csv"
     first_client = SequenceClient(["NETWORK_API"])
@@ -110,3 +110,50 @@ def test_resume_skips_finalized_rows_without_overwriting_them(tmp_path):
     assert [record.sample_id for record in records] == ["T001", "T002"]
     assert records[0].raw_output == "NETWORK_API"
     assert original_bytes in predictions_path.read_bytes()
+
+
+def test_resume_retries_api_failure_and_replaces_it_without_duplicate_ids(tmp_path):
+    bundle = load_dataset(write_protocol_dataset(tmp_path / "dataset_v1.csv"))
+    predictions_path = tmp_path / "predictions.csv"
+    first_client = SequenceClient([TimeoutError("temporary outage"), "not-a-label", "NETWORK_API"])
+    first_records = run_predictions(
+        samples=bundle.tests[:3],
+        demos=bundle.demos,
+        model_config=model_config(),
+        prompt_type="zero_shot",
+        run_id=1,
+        predictions_path=predictions_path,
+        prompt_dir="prompts",
+        client=first_client,
+    )
+    assert [record.api_status for record in first_records] == [
+        API_STATUS_FAILURE,
+        API_STATUS_SUCCESS,
+        API_STATUS_SUCCESS,
+    ]
+    assert first_records[1].prediction == INVALID_OUTPUT
+
+    resumed_client = SequenceClient(["CODE_RUNTIME"])
+    final_records = run_predictions(
+        samples=bundle.tests[:3],
+        demos=bundle.demos,
+        model_config=model_config(),
+        prompt_type="zero_shot",
+        run_id=1,
+        predictions_path=predictions_path,
+        prompt_dir="prompts",
+        client=resumed_client,
+    )
+
+    assert len(resumed_client.prompts) == 1
+    assert [record.sample_id for record in final_records] == ["T001", "T002", "T003"]
+    assert final_records[0].api_status == API_STATUS_SUCCESS
+    assert final_records[0].prediction == "CODE_RUNTIME"
+    assert final_records[0].api_error == ""
+    assert final_records[1].prediction == INVALID_OUTPUT
+    assert final_records[2].prediction == "NETWORK_API"
+
+    with predictions_path.open(encoding="utf-8", newline="") as handle:
+        saved = list(csv.DictReader(handle))
+    assert [row["sample_id"] for row in saved] == ["T001", "T002", "T003"]
+    assert sum(row["sample_id"] == "T001" for row in saved) == 1

@@ -94,9 +94,11 @@ def run_predictions(
         run_id=run_id,
     )
     by_sample_id = {record.sample_id: record for record in records}
+    record_indexes = {record.sample_id: index for index, record in enumerate(records)}
 
     for sample in samples:
-        if sample.id in by_sample_id:
+        existing_record = by_sample_id.get(sample.id)
+        if existing_record is not None and existing_record.api_status == API_STATUS_SUCCESS:
             continue
 
         prompt = render_prompt(prompt_type, sample, demos, prompt_dir=prompt_dir)
@@ -131,7 +133,11 @@ def run_predictions(
                 latency_seconds=time.perf_counter() - started_at,
             )
 
-        records.append(record)
+        if sample.id in record_indexes:
+            records[record_indexes[sample.id]] = record
+        else:
+            record_indexes[sample.id] = len(records)
+            records.append(record)
         by_sample_id[record.sample_id] = record
         _write_records_atomically(output_path, records)
 

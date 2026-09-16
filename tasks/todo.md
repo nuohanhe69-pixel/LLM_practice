@@ -28,7 +28,7 @@
 **Acceptance criteria:**
 - [x] OpenAI-compatible calls use configured model, endpoint, timeout, retry count, and temperature.
 - [x] Raw output, normalized prediction, API status/error, and latency are saved.
-- [x] Existing finalized rows are skipped and never overwritten.
+- [x] Existing `SUCCESS` rows are skipped; `API_FAILURE` rows are retried and replaced without duplicate IDs.
 
 **Verification:**
 - [x] Focused prediction tests pass without network access.

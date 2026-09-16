@@ -8,7 +8,7 @@ Implement the approved experiment protocol in four dependency-ordered slices: va
 
 - Pass immutable `TestSample(id, error_text)` objects into prediction so test ground-truth fields cannot enter prompts by accident.
 - Store model/provider settings in JSON and prompt text in template files so adding a model or revising a prompt does not change prediction control flow.
-- Persist the complete CSV atomically after every finalized sample; existing rows are terminal resume checkpoints.
+- Persist the complete CSV atomically after every attempt; `SUCCESS` rows are terminal checkpoints while `API_FAILURE` rows are retried and replaced in place on resume.
 - Define accuracy as `correct_predictions / successful_predictions`, where API failures are excluded and invalid outputs remain incorrect successful API responses.
 - Place limited runs under `smoke_limit_<N>/` beneath the run directory to prevent overlap with formal artifacts.
 

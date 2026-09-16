@@ -1,0 +1,35 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "llm-practice-experiment"
+version = "0.1.0"
+description = "Reproducible LLM classification experiment pipeline"
+requires-python = ">=3.10"
+dependencies = [
+  "openai==3.14.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest==9.1.1",
+  "ruff==0.16.7",
+]
+
+[project.scripts]
+llm-experiment = "llm_experiment.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/llm_experiment"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+

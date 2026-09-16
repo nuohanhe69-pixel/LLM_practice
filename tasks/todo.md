@@ -3,11 +3,11 @@
 ## Task 1: Project configuration and input validation
 
 **Acceptance criteria:**
-- [ ] Dependencies, Git ignores, model config, and frozen dataset validation are present.
-- [ ] Dataset validation enforces required columns, labels, unique IDs, eight demos, and sixty tests.
+- [x] Dependencies, Git ignores, model config, and frozen dataset validation are present.
+- [x] Dataset validation enforces required columns, labels, unique IDs, eight demos, and sixty tests.
 
 **Verification:**
-- [ ] Focused dataset/config tests pass.
+- [x] Focused dataset/config tests pass.
 
 **Dependencies:** None
 

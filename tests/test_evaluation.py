@@ -43,6 +43,11 @@ def prediction_row(
 
 def test_evaluation_generates_metrics_and_distinct_error_types(tmp_path):
     dataset_path = write_protocol_dataset(tmp_path / "dataset_v1.csv")
+    dataset_content = dataset_path.read_text(encoding="utf-8")
+    dataset_path.write_text(
+        dataset_content.replace("test error 2", "  test error 2  ", 1),
+        encoding="utf-8",
+    )
     predictions_path = tmp_path / "predictions.csv"
     rows = [
         prediction_row("T001", "CODE_RUNTIME"),
@@ -89,7 +94,7 @@ def test_evaluation_generates_metrics_and_distinct_error_types(tmp_path):
         INVALID_OUTPUT,
         API_STATUS_FAILURE,
     ]
-    assert errors[0]["error_text"] == "test error 2"
+    assert errors[0]["error_text"] == "  test error 2  "
     assert errors[1]["raw_output"] == "maybe environment"
     assert errors[2]["api_error"] == "TimeoutError: timed out"
 
@@ -105,4 +110,23 @@ def test_evaluation_requires_exactly_one_prediction_for_each_expected_sample(tmp
             predictions_path=predictions_path,
             output_dir=tmp_path / "results",
             expected_sample_ids=["T001", "T002"],
+        )
+
+
+def test_evaluation_validates_test_ground_truth_labels(tmp_path):
+    dataset_path = write_protocol_dataset(tmp_path / "dataset_v1.csv")
+    content = dataset_path.read_text(encoding="utf-8")
+    dataset_path.write_text(
+        content.replace("T001,test error 1,CODE_RUNTIME", "T001,test error 1,UNKNOWN"),
+        encoding="utf-8",
+    )
+    predictions_path = tmp_path / "predictions.csv"
+    write_predictions(predictions_path, [prediction_row("T001", "CODE_RUNTIME")])
+
+    with pytest.raises(EvaluationError, match="unknown Ground Truth label"):
+        evaluate_predictions(
+            dataset_path=dataset_path,
+            predictions_path=predictions_path,
+            output_dir=tmp_path / "results",
+            expected_sample_ids=["T001"],
         )

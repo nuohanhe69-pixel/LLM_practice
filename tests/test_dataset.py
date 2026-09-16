@@ -44,6 +44,33 @@ def test_load_dataset_rejects_an_unknown_label(tmp_path):
         load_dataset(dataset_path)
 
 
+def test_prediction_dataset_loader_does_not_use_test_ground_truth(tmp_path):
+    dataset_path = write_protocol_dataset(tmp_path / "dataset_v1.csv")
+    content = dataset_path.read_text(encoding="utf-8")
+    dataset_path.write_text(
+        content.replace("T001,test error 1,CODE_RUNTIME", "T001,test error 1,LEAK_SENTINEL"),
+        encoding="utf-8",
+    )
+
+    bundle = load_dataset(dataset_path)
+
+    assert bundle.tests[0].id == "T001"
+    assert not hasattr(bundle.tests[0], "label")
+
+
+def test_load_dataset_preserves_error_text_exactly(tmp_path):
+    dataset_path = write_protocol_dataset(tmp_path / "dataset_v1.csv")
+    content = dataset_path.read_text(encoding="utf-8")
+    dataset_path.write_text(
+        content.replace("test error 1", "  test error 1  ", 1),
+        encoding="utf-8",
+    )
+
+    bundle = load_dataset(dataset_path)
+
+    assert bundle.tests[0].error_text == "  test error 1  "
+
+
 def test_load_dataset_rejects_wrong_protocol_counts(tmp_path):
     dataset_path = write_protocol_dataset(tmp_path / "dataset_v1.csv")
     rows = dataset_path.read_text(encoding="utf-8").splitlines()

@@ -93,14 +93,17 @@ def _load_ground_truth(path: str | Path) -> dict[str, GroundTruth]:
         raise EvaluationError(f"Cannot read ground truth: {dataset_path}") from exc
 
     with handle:
-        for row in csv.DictReader(handle):
-            if row["split"].strip() != "test":
+        for row_number, row in enumerate(csv.DictReader(handle), start=2):
+            if row["split"] != "test":
                 continue
-            sample_id = row["id"].strip()
+            sample_id = row["id"]
+            label = row["label"]
+            if label not in ALLOWED_LABELS:
+                raise EvaluationError(f"Row {row_number} has unknown Ground Truth label {label!r}")
             ground_truth[sample_id] = GroundTruth(
                 sample_id=sample_id,
-                error_text=row["error_text"].strip(),
-                label=row["label"].strip(),
+                error_text=row["error_text"],
+                label=label,
             )
     return ground_truth
 

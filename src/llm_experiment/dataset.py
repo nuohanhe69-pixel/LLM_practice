@@ -55,20 +55,20 @@ def load_dataset(path: str | Path) -> DatasetBundle:
             )
 
         for row_number, row in enumerate(reader, start=2):
-            sample_id = (row["id"] or "").strip()
-            error_text = (row["error_text"] or "").strip()
-            label = (row["label"] or "").strip()
-            split = (row["split"] or "").strip()
+            sample_id = row["id"] or ""
+            error_text = row["error_text"] or ""
+            split = row["split"] or ""
 
-            if not sample_id or not error_text:
+            if not sample_id.strip() or not error_text.strip():
                 raise DatasetValidationError(f"Row {row_number} has an empty id or error_text")
             if sample_id in seen_ids:
                 raise DatasetValidationError(f"Duplicate sample id: {sample_id}")
             seen_ids.add(sample_id)
-            if label not in ALLOWED_LABELS:
-                raise DatasetValidationError(f"Row {row_number} has unknown label {label!r}")
 
             if split == "demo":
+                label = row["label"] or ""
+                if label not in ALLOWED_LABELS:
+                    raise DatasetValidationError(f"Row {row_number} has unknown label {label!r}")
                 demos.append(DemoSample(id=sample_id, error_text=error_text, label=label))
             elif split == "test":
                 tests.append(TestSample(id=sample_id, error_text=error_text))

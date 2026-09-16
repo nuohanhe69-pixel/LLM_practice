@@ -1,15 +1,30 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
 
 from llm_experiment.dataset import load_dataset
 from llm_experiment.prompts import PromptTemplateError, render_prompt
 from tests.helpers import write_protocol_dataset
 
-FROZEN_LABEL_DEFINITIONS = """NETWORK_API：网络连接、DNS、HTTP/API 请求或远端服务可用性问题。
-CONTEXT_LIMIT：上下文窗口、Token 数量、输入长度或模型容量限制问题。
-ENV_DEPENDENCY：运行环境、依赖包、模块、版本、设备或安装问题。
-CODE_RUNTIME：代码语法、类型、取值、索引、逻辑或执行期异常，且不属于以上类别。"""
+FROZEN_LABEL_DEFINITIONS = "\n".join(
+    (
+        "NETWORK_API：网络连接、远程 API/服务通信、网关/端点可用性、连接中断或超时。",
+        (
+            "CONTEXT_LIMIT：请求体大小、输入/Token 长度、序列长度、"
+            "上下文窗口容量或明确的输入/请求大小上限。"
+        ),
+        "ENV_DEPENDENCY：缺少包/模块/系统库、依赖版本不兼容、解释器/运行时版本不匹配或依赖解析失败。",
+        "CODE_RUNTIME：在运行环境已可用的前提下，由程序自身运行逻辑、参数或值处理导致的运行时错误。",
+    )
+)
+
+
+def test_label_definitions_match_frozen_taxonomy():
+    definitions = Path("prompts/label_definitions.txt").read_text(encoding="utf-8").strip()
+
+    assert definitions == FROZEN_LABEL_DEFINITIONS
 
 
 @pytest.mark.parametrize("prompt_type", ["zero_shot", "few_shot"])

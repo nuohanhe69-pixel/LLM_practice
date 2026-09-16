@@ -14,7 +14,7 @@ from llm_experiment.constants import (
     API_STATUS_SUCCESS,
     INVALID_OUTPUT,
 )
-from llm_experiment.dataset import load_dataset
+from llm_experiment.dataset import load_frozen_dataset
 from llm_experiment.prediction import PredictionRecord, load_prediction_records
 
 ERROR_CASE_FIELDS = (
@@ -85,7 +85,7 @@ def evaluate_predictions(
 
 def _load_ground_truth(path: str | Path) -> dict[str, GroundTruth]:
     dataset_path = Path(path)
-    load_dataset(dataset_path)
+    load_frozen_dataset(dataset_path)
     ground_truth: dict[str, GroundTruth] = {}
     try:
         handle = dataset_path.open("r", encoding="utf-8-sig", newline="")

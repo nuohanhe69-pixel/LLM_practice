@@ -2,13 +2,14 @@ from __future__ import annotations
 
 import csv
 import json
+from pathlib import Path
 
 import pytest
 
 from llm_experiment.constants import API_STATUS_FAILURE, API_STATUS_SUCCESS, INVALID_OUTPUT
+from llm_experiment.dataset import DatasetValidationError
 from llm_experiment.evaluation import EvaluationError, evaluate_predictions
 from llm_experiment.prediction import PREDICTION_FIELDS
-from tests.helpers import write_protocol_dataset
 
 
 def write_predictions(path, rows):
@@ -41,13 +42,34 @@ def prediction_row(
     }
 
 
-def test_evaluation_generates_metrics_and_distinct_error_types(tmp_path):
-    dataset_path = write_protocol_dataset(tmp_path / "dataset_v1.csv")
-    dataset_content = dataset_path.read_text(encoding="utf-8")
-    dataset_path.write_text(
-        dataset_content.replace("test error 2", "  test error 2  ", 1),
-        encoding="utf-8",
-    )
+def write_frozen_dataset_with_changed_label(path):
+    with Path("dataset_v1.csv").open("r", encoding="utf-8-sig", newline="") as handle:
+        rows = list(csv.DictReader(handle))
+    rows_by_id = {row["id"]: row for row in rows}
+    rows_by_id["T001"]["label"] = "NETWORK_API"
+    with path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=rows[0])
+        writer.writeheader()
+        writer.writerows(rows)
+    return path
+
+
+def test_evaluation_rejects_label_change_after_predictions_exist(tmp_path):
+    predictions_path = tmp_path / "predictions.csv"
+    write_predictions(predictions_path, [prediction_row("T001", "CODE_RUNTIME")])
+    dataset_path = write_frozen_dataset_with_changed_label(tmp_path / "dataset_v1.csv")
+
+    with pytest.raises(DatasetValidationError, match="fingerprint"):
+        evaluate_predictions(
+            dataset_path=dataset_path,
+            predictions_path=predictions_path,
+            output_dir=tmp_path / "results",
+            expected_sample_ids=["T001"],
+        )
+
+
+def test_evaluation_accepts_frozen_dataset_and_generates_metrics(tmp_path):
+    dataset_path = Path("dataset_v1.csv")
     predictions_path = tmp_path / "predictions.csv"
     rows = [
         prediction_row("T001", "CODE_RUNTIME"),
@@ -78,12 +100,12 @@ def test_evaluation_generates_metrics_and_distinct_error_types(tmp_path):
     assert metrics["correct_predictions"] == 1
     assert metrics["accuracy"] == pytest.approx(1 / 3)
     assert metrics["per_class"]["CODE_RUNTIME"] == {
-        "total_samples": 1,
-        "successful_predictions": 1,
+        "total_samples": 2,
+        "successful_predictions": 2,
         "correct_predictions": 1,
-        "accuracy": 1.0,
+        "accuracy": 0.5,
     }
-    assert metrics["per_class"]["NETWORK_API"]["accuracy"] is None
+    assert metrics["per_class"]["NETWORK_API"]["accuracy"] == 0.0
 
     saved_metrics = json.loads((output_dir / "metrics.json").read_text(encoding="utf-8"))
     assert saved_metrics == metrics
@@ -94,13 +116,16 @@ def test_evaluation_generates_metrics_and_distinct_error_types(tmp_path):
         INVALID_OUTPUT,
         API_STATUS_FAILURE,
     ]
-    assert errors[0]["error_text"] == "  test error 2  "
+    assert errors[0]["error_text"] == (
+        "json.decoder.JSONDecodeError: Expecting property name enclosed in double quotes "
+        "at line 1 column 2"
+    )
     assert errors[1]["raw_output"] == "maybe environment"
     assert errors[2]["api_error"] == "TimeoutError: timed out"
 
 
 def test_evaluation_requires_exactly_one_prediction_for_each_expected_sample(tmp_path):
-    dataset_path = write_protocol_dataset(tmp_path / "dataset_v1.csv")
+    dataset_path = Path("dataset_v1.csv")
     predictions_path = tmp_path / "predictions.csv"
     write_predictions(predictions_path, [prediction_row("T001", "CODE_RUNTIME")])
 
@@ -110,23 +135,4 @@ def test_evaluation_requires_exactly_one_prediction_for_each_expected_sample(tmp
             predictions_path=predictions_path,
             output_dir=tmp_path / "results",
             expected_sample_ids=["T001", "T002"],
-        )
-
-
-def test_evaluation_validates_test_ground_truth_labels(tmp_path):
-    dataset_path = write_protocol_dataset(tmp_path / "dataset_v1.csv")
-    content = dataset_path.read_text(encoding="utf-8")
-    dataset_path.write_text(
-        content.replace("T001,test error 1,CODE_RUNTIME", "T001,test error 1,UNKNOWN"),
-        encoding="utf-8",
-    )
-    predictions_path = tmp_path / "predictions.csv"
-    write_predictions(predictions_path, [prediction_row("T001", "CODE_RUNTIME")])
-
-    with pytest.raises(EvaluationError, match="unknown Ground Truth label"):
-        evaluate_predictions(
-            dataset_path=dataset_path,
-            predictions_path=predictions_path,
-            output_dir=tmp_path / "results",
-            expected_sample_ids=["T001"],
         )

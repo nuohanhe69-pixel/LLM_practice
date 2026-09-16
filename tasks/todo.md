@@ -38,12 +38,12 @@
 ## Task 4: Evaluation
 
 **Acceptance criteria:**
-- [ ] Ground truth is joined by sample ID only inside evaluation code.
-- [ ] Required global and per-class metrics are programmatically generated.
-- [ ] Incorrect, invalid, and API-failure rows are written to `error_cases.csv` and remain distinguishable.
+- [x] Ground truth is joined by sample ID only inside evaluation code.
+- [x] Required global and per-class metrics are programmatically generated.
+- [x] Incorrect, invalid, and API-failure rows are written to `error_cases.csv` and remain distinguishable.
 
 **Verification:**
-- [ ] Focused evaluation tests pass.
+- [x] Focused evaluation tests pass.
 
 **Dependencies:** Tasks 1 and 3
 

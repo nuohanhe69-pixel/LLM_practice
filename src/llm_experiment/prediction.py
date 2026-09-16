@@ -85,7 +85,7 @@ def run_predictions(
         raise ValueError("Prediction samples contain duplicate IDs")
 
     output_path = Path(predictions_path)
-    records = _read_records(output_path)
+    records = load_prediction_records(output_path)
     _validate_checkpoint(
         records,
         target_ids=set(sample_ids),
@@ -138,7 +138,8 @@ def run_predictions(
     return [by_sample_id[sample_id] for sample_id in sample_ids]
 
 
-def _read_records(path: Path) -> list[PredictionRecord]:
+def load_prediction_records(path: str | Path) -> list[PredictionRecord]:
+    path = Path(path)
     if not path.exists():
         return []
     try:

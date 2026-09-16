@@ -19,6 +19,7 @@ FROZEN_LABEL_DEFINITIONS = "\n".join(
         "CODE_RUNTIME：在运行环境已可用的前提下，由程序自身运行逻辑、参数或值处理导致的运行时错误。",
     )
 )
+ROOT_CAUSE_RULE = "按主要根因分类，而不是按报错的表面形式分类。"
 
 
 def test_label_definitions_match_frozen_taxonomy():
@@ -35,6 +36,16 @@ def test_prompt_uses_frozen_label_taxonomy(prompt_type, tmp_path):
     prompt = render_prompt(prompt_type, bundle.tests[0], bundle.demos, prompt_dir="prompts")
 
     assert FROZEN_LABEL_DEFINITIONS in prompt
+
+
+@pytest.mark.parametrize("prompt_type", ["zero_shot", "few_shot"])
+def test_prompt_uses_shared_root_cause_rule_once(prompt_type, tmp_path):
+    dataset_path = write_protocol_dataset(tmp_path / "dataset_v1.csv")
+    bundle = load_dataset(dataset_path)
+
+    prompt = render_prompt(prompt_type, bundle.tests[0], bundle.demos, prompt_dir="prompts")
+
+    assert prompt.count(ROOT_CAUSE_RULE) == 1
 
 
 def test_zero_shot_prompt_contains_definitions_and_only_current_test_text(tmp_path):

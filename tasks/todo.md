@@ -73,11 +73,11 @@
 ## Task 7: Delivery
 
 **Acceptance criteria:**
-- [ ] Full test, lint, format, and compile checks pass.
-- [ ] No secret, `.env`, result artifact, or dataset modification is committed.
-- [ ] Commits are pushed to the target repository.
+- [x] Full test, lint, format, and compile checks pass.
+- [x] No secret, `.env`, result artifact, or dataset modification is committed.
+- [x] Commits are pushed to the target repository.
 
 **Verification:**
-- [ ] Remote branch contains the final commit hash.
+- [x] Remote branch contains the final commit hash.
 
 **Dependencies:** Tasks 1-6

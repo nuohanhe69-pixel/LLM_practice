@@ -1,0 +1,13 @@
+scope,model,difficulty,total,success,invalid_output,api_failure,correct,accuracy
+overall,ALL,ALL,72,48,24,0,45,0.625000
+model,qwen3.7-plus,ALL,24,24,0,0,22,0.916667
+model,glm-5,ALL,24,24,0,0,23,0.958333
+model,deepseek-v4-pro,ALL,24,0,24,0,0,0.000000
+difficulty,ALL,Medium,36,24,12,0,23,0.638889
+difficulty,ALL,Hard,36,24,12,0,22,0.611111
+model_difficulty,qwen3.7-plus,Medium,12,12,0,0,12,1.000000
+model_difficulty,qwen3.7-plus,Hard,12,12,0,0,10,0.833333
+model_difficulty,glm-5,Medium,12,12,0,0,11,0.916667
+model_difficulty,glm-5,Hard,12,12,0,0,12,1.000000
+model_difficulty,deepseek-v4-pro,Medium,12,0,12,0,0,0.000000
+model_difficulty,deepseek-v4-pro,Hard,12,0,12,0,0,0.000000

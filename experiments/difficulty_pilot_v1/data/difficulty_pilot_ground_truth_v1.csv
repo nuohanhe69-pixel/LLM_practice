@@ -1,0 +1,25 @@
+﻿id,candidate_id,label,difficulty,difficulty_score,title,candidate_source_plan,source_file,split
+P001,R-H4,CODE_RUNTIME,Hard,9,Token 仍在上限内，但并行 state merge 打乱 Tool 消息顺序：CONTEXT_LIMIT 镜像,SYNTHETIC / ADAPTED_CASE,CODE_RUNTIME统一收紧最终候选版V4.md,pilot
+P002,N-H1,NETWORK_API,Hard,8,JSONDecodeError，但原始网关字节数表明响应被截断,SYNTHETIC / ADAPTED_CASE,NETWORK_API统一收紧最终候选版V4.md,pilot
+P003,R-M5,CODE_RUNTIME,Medium,6,异步 callback 中再次启动同步 event loop,PUBLIC_CASE / ADAPTED_CASE,CODE_RUNTIME统一收紧最终候选版V4.md,pilot
+P004,C-H2,CONTEXT_LIMIT,Hard,,base64 inline 膨胀 + reference A/B,,CONTEXT_LIMIT统一收紧最终候选版V4.md,pilot
+P005,N-M2,NETWORK_API,Medium,5,Tool wrapper 失败 + 代理原始响应,PUBLIC_CASE / ADAPTED_CASE,NETWORK_API统一收紧最终候选版V4.md,pilot
+P006,C-M5,CONTEXT_LIMIT,Medium,6,Compaction 成功，但最终 body 仍超过 gateway 配置,SYNTHETIC / ADAPTED_CASE,CONTEXT_LIMIT统一收紧最终候选版V4.md,pilot
+P007,C-H1,CONTEXT_LIMIT,Hard,,profile 继承 output budget + 同 route A/B,,CONTEXT_LIMIT统一收紧最终候选版V4.md,pilot
+P008,E-H1,ENV_DEPENDENCY,Hard,,中性对象 schema introspection + package A/B,,ENV_DEPENDENCY统一收紧最终候选版V3.md,pilot
+P009,E-M4,ENV_DEPENDENCY,Medium,6,SOCKS 初始化失败，请求尚未发出,ADAPTED_CASE,ENV_DEPENDENCY统一收紧最终候选版V3.md,pilot
+P010,N-H2,NETWORK_API,Hard,,同一请求跨路由表现不同：CONTEXT_LIMIT 强干扰,,NETWORK_API统一收紧最终候选版V4.md,pilot
+P011,E-H4,ENV_DEPENDENCY,Hard,9,ImportError / loader symbol failure,PUBLIC_CASE / ADAPTED_CASE,ENV_DEPENDENCY统一收紧最终候选版V3.md,pilot
+P012,R-M2,CODE_RUNTIME,Medium,6,当前函数签名存在，但调用参数名写错,SYNTHETIC / ADAPTED_CASE,CODE_RUNTIME统一收紧最终候选版V4.md,pilot
+P013,E-M3,ENV_DEPENDENCY,Medium,6,包存在，但 native loader 失败,PUBLIC_CASE / ADAPTED_CASE,ENV_DEPENDENCY统一收紧最终候选版V3.md,pilot
+P014,R-M1,CODE_RUNTIME,Medium,6,Tool wrapper 改变数据类型，handler 误判 content 结构,ADAPTED_CASE / SYNTHETIC,CODE_RUNTIME统一收紧最终候选版V4.md,pilot
+P015,E-H3,ENV_DEPENDENCY,Hard,,中性 SDK + curl / CI / package snapshot,,ENV_DEPENDENCY统一收紧最终候选版V3.md,pilot
+P016,R-H1,CODE_RUNTIME,Hard,9,多层配置 merge 破坏合法参数映射：ENV_DEPENDENCY 镜像,SYNTHETIC / ADAPTED_CASE,CODE_RUNTIME统一收紧最终候选版V4.md,pilot
+P017,C-H3,CONTEXT_LIMIT,Hard,,Tool schema 注入 + tools off/on A/B,,CONTEXT_LIMIT统一收紧最终候选版V4.md,pilot
+P018,E-M1,ENV_DEPENDENCY,Medium,6,同代码本地 AttributeError，CI 通过,SYNTHETIC / ADAPTED_CASE,ENV_DEPENDENCY统一收紧最终候选版V3.md,pilot
+P019,N-H4,NETWORK_API,Hard,,raw JSON vs wire Content-Length + gateway A/B,,NETWORK_API统一收紧最终候选版V4.md,pilot
+P020,R-H2,CODE_RUNTIME,Hard,10,Provider 完整响应已到达，但本地 cancellation race 抢先取消 Future：NETWORK_API 镜像,SYNTHETIC / ADAPTED_CASE,CODE_RUNTIME统一收紧最终候选版V4.md,pilot
+P021,N-M4,NETWORK_API,Medium,6,外层 RuntimeError + TCP 握手未完成,ADAPTED_CASE / SYNTHETIC,NETWORK_API统一收紧最终候选版V4.md,pilot
+P022,C-M1,CONTEXT_LIMIT,Medium,5,tokenizer + max_new_tokens + model config,SYNTHETIC / ADAPTED_CASE,CONTEXT_LIMIT统一收紧最终候选版V4.md,pilot
+P023,N-M3,NETWORK_API,Medium,6,流式响应被截断，外层是解析失败,ADAPTED_CASE,NETWORK_API统一收紧最终候选版V4.md,pilot
+P024,C-M2,CONTEXT_LIMIT,Medium,6,history + tool result 跨过容量边界,SYNTHETIC,CONTEXT_LIMIT统一收紧最终候选版V4.md,pilot

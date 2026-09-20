@@ -1,0 +1,2 @@
+id,model,run,prompt_type,raw_output,normalized_output,status,error_type,latency_ms,actual_temperature,timestamp
+P001,qwen3.7-plus,1,zero_shot,CODE_RUNTIME,CODE_RUNTIME,SUCCESS,,9763.834,0.0,2026-09-20T16:50:41+00:00

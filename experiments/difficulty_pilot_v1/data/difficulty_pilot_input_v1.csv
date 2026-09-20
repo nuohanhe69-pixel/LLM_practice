@@ -1,0 +1,504 @@
+﻿id,error_text
+P001,"model_alias=agent-model-x
+
+model metadata:
+max_sequence_length=32768
+
+request A:
+request_tokens=31910
+max_new_tokens=512
+
+provider response:
+HTTP 400
+body={""error"":""invalid conversation""}
+
+wire message tail:
+[
+  {""role"":""assistant"",""tool_calls"":[{""id"":""call_7"",""name"":""search""}]},
+  {""role"":""user"",""content"":""also check the cache""},
+  {""role"":""tool"",""tool_call_id"":""call_7"",""content"":""...""},
+  {""role"":""assistant"",""content"":""...""}
+]
+
+merge trace:
+branch=tool_execution
+emitted role=tool call_id=call_7
+
+branch=user_interrupt
+emitted role=user
+
+parallel merge order:
+assistant(tool_call) -> user -> tool(call_7)
+
+control run:
+parallel_merge=false
+
+wire message tail:
+assistant(tool_call) -> tool(call_7) -> user
+
+same model_alias
+same tool result
+same user message
+request_tokens=31912
+max_new_tokens=512
+
+provider response:
+HTTP 200"
+P002,"application traceback:
+json.decoder.JSONDecodeError:
+Unterminated string starting at line 1 column 284
+
+application buffer length:
+284 bytes
+
+gateway request record:
+status=200
+upstream_response_bytes=1264
+downstream_response_bytes=284
+
+same response parser unit test:
+1264-byte fixture ... PASSED"
+P003,"callback:
+async def on_message(...)
+
+trace:
+asyncio.current_task() -> <Task pending name='Task-18'>
+
+call stack:
+on_message()
+  -> sync_generate()
+  -> loop.run_until_complete(_generate_async())
+
+application:
+RuntimeError: provider helper failed"
+P004,"session_id=s_82a1
+model_alias=agent-model-x
+proxy_route=corp-proxy-a
+
+request A:
+
+messages_json_bytes=1684000
+
+tool artifact:
+raw_bytes=6450000
+embedding_mode=inline
+transfer_encoding=base64
+
+manifest_bytes=126000
+
+edge config:
+max_request_bytes=10485760
+
+application:
+RuntimeError: downstream model call failed
+
+proxy:
+CONNECT api.provider.example:443
+status=200
+
+request B:
+
+same session_id=s_82a1
+same model_alias=agent-model-x
+same proxy_route=corp-proxy-a
+
+tool artifact:
+raw_bytes=6450000
+embedding_mode=reference
+artifact_reference=""file://artifact-7f2""
+
+model response returned"
+P005,"ToolExecutionError: web_model_call returned no result
+
+proxy access log:
+CONNECT api.provider.example:443
+status=407
+bytes_out=0
+
+application log:
+provider request id: <none>"
+P006,"compaction job:
+input_body_bytes=16567500
+output_body_bytes=11219763
+status=completed
+
+gateway config:
+client_max_body_size 10m
+
+model call:
+APIStatusError"
+P007,"request A:
+
+prompt fingerprint=pf_728a
+prompt_tokens=31940
+
+request parameters:
+max_new_tokens=<unset>
+
+profile chain:
+task_profile=research-agent
+generation_profile=balanced
+
+balanced.yaml:
+max_new_tokens: 1024
+
+model metadata:
+model_alias=agent-model-x
+max_sequence_length=32768
+
+route:
+provider-primary
+
+application:
+RuntimeError: model invocation failed
+
+request B:
+
+prompt fingerprint=pf_728a
+prompt_tokens=31940
+model_alias=agent-model-x
+route=provider-primary
+
+request parameters:
+max_new_tokens=256
+
+response_id=resp_8fd..."
+P008,"commit=91fa2c7
+fixture_sha256=7c4e...
+
+local:
+
+Traceback:
+AttributeError: 'AgentMessage' object has no attribute 'tool_calls'
+
+object introspection:
+type(message)=message_core.messages.AgentMessage
+
+""tool_calls"" in dir(message) -> False
+""metadata"" in dir(message) -> True
+
+package snapshot:
+message-core==1.7.4
+agent-runtime==3.2.1
+validation-lib==2.8.2
+
+CI:
+
+commit=91fa2c7
+fixture_sha256=7c4e...
+
+same test ... PASSED
+
+object introspection:
+type(message)=message_core.messages.AgentMessage
+
+""tool_calls"" in dir(message) -> True
+""metadata"" in dir(message) -> True
+
+package snapshot:
+message-core==2.1.0
+agent-runtime==3.2.1
+validation-lib==2.8.2"
+P009,"proxy=socks5://127.0.0.1:7890
+
+client startup:
+RuntimeError: SOCKS transport backend could not be initialized
+
+request_sent=false
+
+$ pip freeze | grep -E 'httpx|socksio'
+httpx==0.28.1"
+P010,"request fingerprint:
+body_sha256=6d8c...
+prompt_tokens=31200
+
+agent profile:
+response_reserve=1024
+
+model metadata:
+model_alias=qwen-x
+config_hash=91c2...
+max_sequence_length=32768
+
+attempt A:
+route=provider-primary
+model_alias=qwen-x
+config_hash=91c2...
+14:10:01 request accepted by edge
+14:10:31 inference_id=<none>
+14:10:31 response_headers=0
+
+retry policy selected provider-secondary without rebuilding the request.
+
+attempt B:
+route=provider-secondary
+model_alias=qwen-x
+config_hash=91c2...
+body_sha256=6d8c...
+prompt_tokens=31200
+inference_id=inf_8af...
+first_token_at=14:10:32.481"
+P011,"$ python -c ""import agent_ext""
+Traceback (most recent call last):
+  ...
+ImportError: /venv/lib/python3.11/site-packages/agent_ext.so:
+version `GLIBCXX_3.4.32' not found
+
+$ strings /usr/lib/x86_64-linux-gnu/libstdc++.so.6 | grep GLIBCXX_3.4. | tail -1
+GLIBCXX_3.4.30
+
+$ python -m pip show agent-ext
+Name: agent-ext
+Version: 1.7.0"
+P012,"call site:
+client.invoke(messages, timeout_s=30)
+
+runtime introspection:
+inspect.signature(client.invoke)
+(messages, *, timeout=None, config=None)
+
+Traceback:
+TypeError: invoke() got an unexpected keyword argument 'timeout_s'"
+P013,"$ python -m pip show torch
+Name: torch
+Version: 2.x
+Location: /venv/lib/python3.x/site-packages
+
+$ python -c ""import torch""
+Traceback (most recent call last):
+  ...
+OSError: libtorch_cuda.so: undefined symbol: cudnnCreateTensorDescriptor
+
+$ ldd /venv/lib/python3.x/site-packages/torch/lib/libtorch_cuda.so | grep cudnn
+libcudnn.so.9 => not found"
+P014,"tool transport:
+HTTP 200
+response_body={""items"":[{""id"":""d1""},{""id"":""d2""}],""count"":2}
+
+tool adapter trace:
+response.json() -> dict
+ToolMessage(
+  content='[{""id"":""d1""},{""id"":""d2""}]',
+  artifact={""count"":2}
+)
+
+answer handler:
+message_type=ToolMessage
+content_type=str
+
+Traceback:
+AttributeError: 'str' object has no attribute 'get'"
+P015,"commit=4b21d11
+
+local Python run:
+client = ProviderClient(...)
+client.stream_responses.create(...)
+
+Traceback:
+AttributeError: 'ProviderClient' object has no attribute 'stream_responses'
+
+local package snapshot:
+provider-sdk==1.8.2
+httpx==0.27.2
+
+same machine:
+curl POST https://api.provider.example/v1/stream-responses
+HTTP 200
+response id: resp_b61...
+
+CI integration for commit 4b21d11:
+client.stream_responses.create(...) ... PASSED
+
+CI package snapshot:
+provider-sdk==2.3.1
+httpx==0.27.2"
+P016,"process:
+pid=21904
+package_snapshot_sha256=81af...
+
+runtime introspection:
+inspect.signature(ChatAdapter.__init__)
+(*, model, reasoning=None, timeout=None)
+
+base config:
+model:
+  reasoning: ""medium""
+  timeout: 30
+
+project override:
+model:
+  provider_options:
+    reasoning_effort: ""medium""
+
+config merge trace:
+stage=load_base
+keys=[""model.reasoning"",""model.timeout""]
+
+stage=apply_project_override
+keys=[
+  ""model.reasoning"",
+  ""model.timeout"",
+  ""model.provider_options.reasoning_effort""
+]
+
+stage=flatten_provider_options
+kwargs_keys=[
+  ""model"",
+  ""reasoning"",
+  ""timeout"",
+  ""reasoning_effort""
+]
+
+config-driven startup:
+Traceback:
+TypeError: ChatAdapter.__init__() got an unexpected keyword argument 'reasoning_effort'
+
+control A, same pid:
+ChatAdapter(model=""agent-model-x"", reasoning=""medium"", timeout=30)
+instance created
+
+control B, same pid:
+project override removed
+config-driven startup completed"
+P017,"session_id=s_9921
+user_message_sha256=ad41...
+model_alias=agent-model-x
+
+shared request components:
+system_and_history_tokens=3650
+user_message_tokens=238
+
+model metadata:
+max_sequence_length=4096
+
+request A:
+tools=[]
+route=provider-primary
+
+request trace:
+response_id=resp_a18...
+model response returned
+
+request B:
+tools=[search_docs, query_db, fetch_url]
+route=provider-primary
+
+tool schema compiler:
+search_docs.schema_tokens=74
+query_db.schema_tokens=83
+fetch_url.schema_tokens=91
+tool_wrapper_tokens=42
+
+application:
+RuntimeError: model invocation failed
+
+package_snapshot_sha256=7f91..."
+P018,"$ git rev-parse --short HEAD
+91fa2c7
+
+$ python test_message.py
+Traceback (most recent call last):
+  ...
+AttributeError: 'AIMessage' object has no attribute 'tool_calls'
+
+$ pip freeze | grep langchain-core
+langchain-core==0.2.4
+
+CI job for commit 91fa2c7:
+test_message.py ... PASSED
+
+CI package snapshot:
+langchain-core==0.3.8"
+P019,"request builder:
+json_bytes=11844231
+
+transport:
+Content-Encoding: gzip
+Content-Length: 9128044
+
+edge config:
+max_request_wire_bytes=10485760
+
+attempt A:
+edge=gw-a
+bytes_sent=7340032
+request_id=<none>
+application: OSError: [Errno 32]
+
+retry:
+request body hash unchanged
+Content-Length: 9128044
+edge=gw-b
+request_id=req_71c...
+HTTP 200"
+P020,"request_id=local_7f2
+timeout_config=30.0s
+
+local timeline:
+14:21:05.000 request future created
+14:21:05.004 transport send started
+14:21:34.918 socket reader received final response bytes
+14:21:34.920 response buffer complete: 1842 bytes
+14:21:34.921 completion callback queued
+14:21:35.000 watchdog task woke
+14:21:35.001 future.cancel()
+14:21:35.004 completion callback executed
+
+provider record:
+HTTP 200
+response_id=resp_73c...
+response_body_bytes=1842
+
+completion callback:
+future_state=cancelled
+set_result(response) -> InvalidStateError
+
+agent node:
+RuntimeError: provider call timed out
+state key 'answer' not written"
+P021,"application:
+RuntimeError: provider call returned no response
+
+packet trace:
+14:07:12.101  10.0.0.24:53144 > 10.24.8.17:443  Flags [S]
+14:07:13.109  10.0.0.24:53144 > 10.24.8.17:443  Flags [S]
+14:07:15.126  10.0.0.24:53144 > 10.24.8.17:443  Flags [S]
+14:07:19.158  10.0.0.24:53144 > 10.24.8.17:443  Flags [S]
+
+application trace:
+provider_request_id=<none>
+response_headers=0"
+P022,"tokenizer:
+input_ids length = 8110
+
+generation config:
+max_new_tokens = 512
+
+model config.json:
+""max_position_embeddings"": 8192
+
+application:
+RuntimeError: generation request rejected"
+P023,"stream chunks received:
+1: {""delta"":""The""}
+2: {""delta"":"" result""}
+3: {""delta"":"" is""
+
+parser:
+json.decoder.JSONDecodeError: Expecting ',' delimiter at char 284
+
+gateway access log:
+status=200
+response_bytes=284
+upstream_response_bytes=917"
+P024,"conversation trace:
+messages before tool result = 15700 tokens
+
+tool output tokenizer:
+1120 tokens
+
+model config.json:
+""max_position_embeddings"": 16384
+
+next model call:
+RuntimeError: provider request rejected"

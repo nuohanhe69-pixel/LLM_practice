@@ -22,7 +22,8 @@ class ModelConfig:
     base_url: str
     api_key_env: str
     temperature: float
-    max_tokens: int
+    max_tokens: int | None
+    max_completion_tokens: int | None
     timeout_seconds: float
     max_retries: int
 
@@ -63,7 +64,12 @@ def load_model_config(
         raise ConfigurationError("base_url must use http:// or https://")
 
     temperature = _required_number(raw, "temperature")
-    max_tokens = _required_integer(raw, "max_tokens", minimum=1)
+    max_tokens = _optional_integer(raw, "max_tokens", minimum=1)
+    max_completion_tokens = _optional_integer(raw, "max_completion_tokens", minimum=1)
+    if (max_tokens is None) == (max_completion_tokens is None):
+        raise ConfigurationError(
+            "Exactly one of max_tokens or max_completion_tokens must be configured"
+        )
     timeout_seconds = _required_number(raw, "timeout_seconds")
     max_retries = _required_integer(raw, "max_retries", minimum=0)
     if not 0 <= temperature <= 2:
@@ -78,6 +84,7 @@ def load_model_config(
         api_key_env=_required_string(raw, "api_key_env"),
         temperature=float(temperature),
         max_tokens=max_tokens,
+        max_completion_tokens=max_completion_tokens,
         timeout_seconds=float(timeout_seconds),
         max_retries=max_retries,
     )
@@ -102,3 +109,9 @@ def _required_integer(raw: dict[str, Any], key: str, *, minimum: int) -> int:
     if isinstance(value, bool) or not isinstance(value, int) or value < minimum:
         raise ConfigurationError(f"{key} must be an integer >= {minimum}")
     return value
+
+
+def _optional_integer(raw: dict[str, Any], key: str, *, minimum: int) -> int | None:
+    if key not in raw:
+        return None
+    return _required_integer(raw, key, minimum=minimum)

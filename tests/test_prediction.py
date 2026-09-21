@@ -34,6 +34,7 @@ def model_config() -> ModelConfig:
         api_key_env="TEST_API_KEY",
         temperature=0.0,
         max_tokens=8,
+        max_completion_tokens=None,
         timeout_seconds=5.0,
         max_retries=2,
     )

@@ -7,6 +7,7 @@ import pytest
 from openai import APIStatusError, APITimeoutError
 
 from llm_experiment.api_client import (
+    CompletionResult,
     OpenAICompatibleClient,
     ProviderConfigurationError,
     ProviderFatalError,
@@ -24,6 +25,7 @@ def model_config() -> ModelConfig:
         api_key_env="TEST_API_KEY",
         temperature=0.0,
         max_tokens=8,
+        max_completion_tokens=None,
         timeout_seconds=12.5,
         max_retries=2,
     )
@@ -67,7 +69,13 @@ def test_openai_compatible_client_sends_configured_generation_parameters():
         def create(self, **kwargs):
             captured.update(kwargs)
             return SimpleNamespace(
-                choices=[SimpleNamespace(message=SimpleNamespace(content="NETWORK_API"))]
+                choices=[
+                    SimpleNamespace(
+                        message=SimpleNamespace(content="NETWORK_API"),
+                        finish_reason="stop",
+                    )
+                ],
+                usage=None,
             )
 
     sdk_client = SimpleNamespace(chat=SimpleNamespace(completions=FakeCompletions()))
@@ -82,6 +90,76 @@ def test_openai_compatible_client_sends_configured_generation_parameters():
         "temperature": 0.0,
         "max_tokens": 8,
     }
+
+
+def test_openai_compatible_client_returns_thinking_metadata():
+    captured: dict[str, object] = {}
+
+    class FakeCompletions:
+        def create(self, **kwargs):
+            captured.update(kwargs)
+            details = SimpleNamespace(reasoning_tokens=37)
+            usage = SimpleNamespace(completion_tokens=41, completion_tokens_details=details)
+            message = SimpleNamespace(
+                content="CONTEXT_LIMIT",
+                reasoning_content="diagnostic reasoning",
+            )
+            return SimpleNamespace(
+                choices=[SimpleNamespace(message=message, finish_reason="stop")],
+                usage=usage,
+            )
+
+    config = ModelConfig(
+        name="deepseek_test",
+        api_model="deepseek-test",
+        base_url="https://example.invalid/v1",
+        api_key_env="TEST_API_KEY",
+        temperature=0.0,
+        max_tokens=None,
+        max_completion_tokens=2048,
+        timeout_seconds=12.5,
+        max_retries=2,
+    )
+    client = OpenAICompatibleClient(
+        config,
+        SimpleNamespace(chat=SimpleNamespace(completions=FakeCompletions())),
+    )
+
+    result = client.complete_with_metadata("classify this")
+
+    assert result == CompletionResult(
+        content="CONTEXT_LIMIT",
+        reasoning_content="diagnostic reasoning",
+        finish_reason="stop",
+        completion_tokens=41,
+        reasoning_tokens=37,
+    )
+    assert captured["max_completion_tokens"] == 2048
+    assert "max_tokens" not in captured
+
+
+def test_openai_compatible_client_preserves_length_finish_reason():
+    class FakeCompletions:
+        def create(self, **kwargs):
+            details = SimpleNamespace(reasoning_tokens=16)
+            usage = SimpleNamespace(completion_tokens=16, completion_tokens_details=details)
+            message = SimpleNamespace(content="", reasoning_content="still thinking")
+            return SimpleNamespace(
+                choices=[SimpleNamespace(message=message, finish_reason="length")],
+                usage=usage,
+            )
+
+    client = OpenAICompatibleClient(
+        model_config(),
+        SimpleNamespace(chat=SimpleNamespace(completions=FakeCompletions())),
+    )
+
+    result = client.complete_with_metadata("classify this")
+
+    assert result.content == ""
+    assert result.finish_reason == "length"
+    assert result.completion_tokens == 16
+    assert result.reasoning_tokens == 16
 
 
 def test_openai_compatible_client_wraps_provider_timeout():

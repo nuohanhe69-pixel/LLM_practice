@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 from collections.abc import Mapping
+from dataclasses import dataclass
 from typing import Any
 
 from openai import APIConnectionError, APIError, APIStatusError, OpenAI
@@ -21,6 +22,17 @@ class ProviderFatalError(RuntimeError):
     """Raised when a provider error cannot recover by moving to another sample."""
 
 
+@dataclass(frozen=True, slots=True)
+class CompletionResult:
+    """Provider response fields needed for classification and run diagnostics."""
+
+    content: str
+    reasoning_content: str | None
+    finish_reason: str | None
+    completion_tokens: int | None
+    reasoning_tokens: int | None
+
+
 class OpenAICompatibleClient:
     """Small provider boundary around an OpenAI-compatible chat client."""
 
@@ -29,12 +41,22 @@ class OpenAICompatibleClient:
         self._sdk_client = sdk_client
 
     def complete(self, prompt: str) -> str:
+        return self.complete_with_metadata(prompt).content
+
+    def complete_with_metadata(self, prompt: str) -> CompletionResult:
+        # max_completion_tokens includes visible and reasoning tokens:
+        # https://developers.openai.com/api/docs/guides/token-counting
+        generation_budget = (
+            {"max_tokens": self._config.max_tokens}
+            if self._config.max_tokens is not None
+            else {"max_completion_tokens": self._config.max_completion_tokens}
+        )
         try:
             response = self._sdk_client.chat.completions.create(
                 model=self._config.api_model,
                 messages=[{"role": "user", "content": prompt}],
                 temperature=self._config.temperature,
-                max_tokens=self._config.max_tokens,
+                **generation_budget,
             )
         except APIConnectionError as exc:
             raise ProviderRequestError(f"{type(exc).__name__}: {exc}") from exc
@@ -49,8 +71,19 @@ class OpenAICompatibleClient:
             raise ProviderFatalError(f"{type(exc).__name__}: {exc}") from exc
         except (TimeoutError, ConnectionError) as exc:
             raise ProviderRequestError(f"{type(exc).__name__}: {exc}") from exc
-        content = response.choices[0].message.content
-        return content if isinstance(content, str) else ""
+        choice = response.choices[0]
+        message = choice.message
+        content = message.content if isinstance(message.content, str) else ""
+        reasoning_content = getattr(message, "reasoning_content", None)
+        usage = getattr(response, "usage", None)
+        completion_details = getattr(usage, "completion_tokens_details", None)
+        return CompletionResult(
+            content=content,
+            reasoning_content=(reasoning_content if isinstance(reasoning_content, str) else None),
+            finish_reason=(choice.finish_reason if isinstance(choice.finish_reason, str) else None),
+            completion_tokens=_optional_int(getattr(usage, "completion_tokens", None)),
+            reasoning_tokens=_optional_int(getattr(completion_details, "reasoning_tokens", None)),
+        )
 
 
 def build_openai_client(
@@ -76,3 +109,7 @@ def build_openai_client(
         max_retries=config.max_retries,
     )
     return OpenAICompatibleClient(config, sdk_client)
+
+
+def _optional_int(value: object) -> int | None:
+    return value if isinstance(value, int) and not isinstance(value, bool) else None

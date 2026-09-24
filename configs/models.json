@@ -1,7 +1,7 @@
 {
   "models": {
     "qwen3_7_plus": {
-      "api_model": "qwen3.7-plus",
+      "api_model": "qwen3.7-plus-2026-05-26",
       "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
       "base_url_env": "DASHSCOPE_BASE_URL",
       "api_key_env": "DASHSCOPE_API_KEY",

@@ -42,7 +42,7 @@ Smoke Test 与正式实验使用完全相同的流水线。`--limit` 只限制�
 
 ```bash
 uv run python run_experiment.py \
-  --model qwen_plus \
+  --model qwen3_7_plus \
   --prompt-type zero_shot \
   --run-id 1 \
   --limit 10
@@ -52,7 +52,7 @@ uv run python run_experiment.py \
 
 ```bash
 uv run python run_experiment.py \
-  --model qwen_plus \
+  --model qwen3_7_plus \
   --prompt-type few_shot \
   --run-id 1
 ```

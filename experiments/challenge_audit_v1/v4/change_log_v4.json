@@ -1,0 +1,45 @@
+{
+  "base_version": "V3",
+  "target_version": "V4",
+  "base_dataset_sha256": "da66919aa555134ac69e6bce54ddaa9c82b72aeaa297bd0e15bab126060b6544",
+  "target_dataset_sha256": "302789172958b83dbe28149ee5f0d88060d4a3c0e1a4973ccf0372f5d807eb89",
+  "target_model_input_sha256": "9f7b76c01ba28100458220b74b4c9183c8657f948aef336bc4673cbf5a5b48c7",
+  "changes": [
+    {
+      "id": "T011",
+      "type": "surface_shortcut_repair",
+      "field": "error_text",
+      "mechanism_unchanged": true,
+      "label_unchanged": true,
+      "primary_distractor_unchanged": true,
+      "boundary_pair_unchanged": true,
+      "design_id_unchanged": true,
+      "evidence_pattern_unchanged": true,
+      "description": "Remove direct exact-measurement + exact-threshold arithmetic shortcut while preserving stage, representation-scope, and counterfactual evidence."
+    },
+    {
+      "id": "T042",
+      "type": "surface_shortcut_repair",
+      "field": "error_text",
+      "mechanism_unchanged": true,
+      "label_unchanged": true,
+      "primary_distractor_unchanged": true,
+      "boundary_pair_unchanged": true,
+      "design_id_unchanged": true,
+      "evidence_pattern_unchanged": true,
+      "description": "Remove direct exact-measurement + exact-threshold arithmetic shortcut while preserving stage, representation-scope, and counterfactual evidence."
+    },
+    {
+      "id": "T044",
+      "type": "surface_shortcut_repair",
+      "field": "error_text",
+      "mechanism_unchanged": true,
+      "label_unchanged": true,
+      "primary_distractor_unchanged": true,
+      "boundary_pair_unchanged": true,
+      "design_id_unchanged": true,
+      "evidence_pattern_unchanged": true,
+      "description": "Remove direct exact-measurement + exact-threshold arithmetic shortcut while preserving stage, representation-scope, and counterfactual evidence."
+    }
+  ]
+}

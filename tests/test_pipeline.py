@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from llm_experiment.dataset import load_frozen_dataset
 from llm_experiment.pipeline import resolve_result_directory, run_experiment
 from tests.test_prediction import SequenceClient
 
@@ -30,7 +31,7 @@ def write_model_config(path):
 
 
 def test_smoke_run_uses_full_pipeline_and_isolated_result_directory(tmp_path):
-    dataset_path = Path("dataset_v1.csv")
+    dataset_path = Path("dataset_v2.csv")
     config_path = write_model_config(tmp_path / "models.json")
     results_root = tmp_path / "results"
     client = SequenceClient(["CODE_RUNTIME", "CONTEXT_LIMIT", "invalid"])
@@ -72,6 +73,30 @@ def test_smoke_run_uses_full_pipeline_and_isolated_result_directory(tmp_path):
     )
     assert resumed.metrics == result.metrics
     assert resumed_client.prompts == []
+
+
+def test_default_pipeline_uses_v2_test_text_and_eight_demos(tmp_path):
+    bundle = load_frozen_dataset("dataset_v2.csv")
+    config_path = write_model_config(tmp_path / "models.json")
+    client = SequenceClient(["ENV_DEPENDENCY"])
+
+    result = run_experiment(
+        model_name="qwen_test",
+        prompt_type="few_shot",
+        run_id=1,
+        limit=1,
+        model_config_path=config_path,
+        prompt_dir="prompts",
+        results_root=tmp_path / "results",
+        client=client,
+    )
+
+    assert result.metrics["total_samples"] == 1
+    assert len(client.prompts) == 1
+    assert bundle.tests[0].error_text in client.prompts[0]
+    assert client.prompts[0].count("示例 ") == 8
+    assert all(demo.error_text in client.prompts[0] for demo in bundle.demos)
+    assert "AssertionError: tool call id must not be empty" not in client.prompts[0]
 
 
 def test_formal_and_limited_runs_resolve_to_different_directories(tmp_path):

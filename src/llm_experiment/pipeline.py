@@ -25,7 +25,7 @@ def run_experiment(
     model_name: str,
     prompt_type: str,
     run_id: int,
-    dataset_path: str | Path = "dataset_v1.csv",
+    dataset_path: str | Path = "dataset_v2.csv",
     model_config_path: str | Path = "configs/models.json",
     prompt_dir: str | Path = "prompts",
     results_root: str | Path = "results",

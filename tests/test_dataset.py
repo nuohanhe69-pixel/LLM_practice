@@ -1,17 +1,25 @@
 from __future__ import annotations
 
 import csv
+import hashlib
+from dataclasses import fields
 from pathlib import Path
 
 import pytest
 
 from llm_experiment.constants import DATASET_FIELDS
-from llm_experiment.dataset import DatasetValidationError, load_dataset, load_frozen_dataset
+from llm_experiment.dataset import (
+    DatasetValidationError,
+    dataset_fingerprint,
+    load_dataset,
+    load_frozen_dataset,
+)
+from llm_experiment.dataset import TestSample as DatasetTestSample
 from tests.helpers import write_protocol_dataset
 
 
 def write_modified_frozen_dataset(path, *, field, value):
-    with Path("dataset_v1.csv").open("r", encoding="utf-8-sig", newline="") as handle:
+    with Path("dataset_v2.csv").open("r", encoding="utf-8-sig", newline="") as handle:
         rows = list(csv.DictReader(handle))
     rows[0][field] = value
     with path.open("w", encoding="utf-8", newline="") as handle:
@@ -22,16 +30,30 @@ def write_modified_frozen_dataset(path, *, field, value):
 
 
 def test_frozen_dataset_fingerprint_accepts_reviewed_dataset():
-    bundle = load_frozen_dataset("dataset_v1.csv")
+    dataset_path = Path("dataset_v2.csv")
+    bundle = load_frozen_dataset(dataset_path)
 
+    assert hashlib.sha256(dataset_path.read_bytes()).hexdigest() == (
+        "3471f8572b9953f4de7e8a547fad88893265c3f304d7c2fd5fdf5b38afd4876e"
+    )
+    assert dataset_fingerprint(dataset_path) == (
+        "7abb151f8a42bca101465011726ffcf6376fb20523e0dd9cdfc559dacf0610f0"
+    )
     assert len(bundle.demos) == 8
     assert len(bundle.tests) == 60
-    assert not hasattr(bundle.tests[0], "label")
+    assert [demo.id for demo in bundle.demos] == [f"D{index:03d}" for index in range(1, 9)]
+    assert [sample.id for sample in bundle.tests] == [f"T{index:03d}" for index in range(1, 61)]
+    assert tuple(field.name for field in fields(DatasetTestSample)) == ("id", "error_text")
+
+
+def test_previous_dataset_is_not_the_active_frozen_dataset():
+    with pytest.raises(DatasetValidationError, match="fingerprint"):
+        load_frozen_dataset("dataset_v1.csv")
 
 
 def test_frozen_dataset_fingerprint_rejects_modified_error_text(tmp_path):
     dataset_path = write_modified_frozen_dataset(
-        tmp_path / "dataset_v1.csv",
+        tmp_path / "dataset_v2.csv",
         field="error_text",
         value="modified error text",
     )
@@ -42,7 +64,7 @@ def test_frozen_dataset_fingerprint_rejects_modified_error_text(tmp_path):
 
 def test_frozen_dataset_fingerprint_rejects_modified_label(tmp_path):
     dataset_path = write_modified_frozen_dataset(
-        tmp_path / "dataset_v1.csv",
+        tmp_path / "dataset_v2.csv",
         field="label",
         value="CONTEXT_LIMIT",
     )

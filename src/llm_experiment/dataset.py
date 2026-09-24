@@ -13,7 +13,7 @@ from llm_experiment.constants import (
     EXPECTED_TEST_COUNT,
 )
 
-FROZEN_DATASET_SHA256 = "1ca0bc48996cd5ee596b066161f4baa0d7c8e9dea5688bdfa7c5d542db6f8961"
+FROZEN_DATASET_SHA256 = "7abb151f8a42bca101465011726ffcf6376fb20523e0dd9cdfc559dacf0610f0"
 
 
 class DatasetValidationError(ValueError):

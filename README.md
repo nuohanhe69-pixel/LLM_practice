@@ -1,6 +1,6 @@
 # LLM Practice Experiment Pipeline
 
-该项目提供一条可复现的四分类实验流水线：读取冻结的 `dataset_v1.csv`，调用阿里云百炼 OpenAI-compatible API 生成预测，并自动输出指标与错误案例。Prediction 与 Evaluation 在代码层分离，通过统一 CLI 串联。
+该项目提供一条可复现的四分类实验流水线：默认读取冻结的 `dataset_v2.csv`，调用阿里云百炼 OpenAI-compatible API 生成预测，并自动输出指标与错误案例。Prediction 与 Evaluation 在代码层分离，通过统一 CLI 串联。
 
 ## 环境准备
 
@@ -18,7 +18,7 @@ source .venv/bin/activate
 python -m pip install -e ".[dev]"
 ```
 
-将冻结的 `dataset_v1.csv` 原样放在仓库根目录。程序会严格校验字段、标签、唯一 ID、8 条 demo 和 60 条 test；不会修改该文件。
+冻结的 `dataset_v2.csv` 已原样保存在仓库根目录。程序会严格校验字段、标签、唯一 ID、8 条 demo 和 60 条 test；不会修改该文件。旧版 `dataset_v1.csv` 保留作历史记录。
 
 ## API 配置
 

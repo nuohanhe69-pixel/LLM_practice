@@ -43,7 +43,7 @@ def prediction_row(
 
 
 def write_frozen_dataset_with_changed_label(path):
-    with Path("dataset_v1.csv").open("r", encoding="utf-8-sig", newline="") as handle:
+    with Path("dataset_v2.csv").open("r", encoding="utf-8-sig", newline="") as handle:
         rows = list(csv.DictReader(handle))
     rows_by_id = {row["id"]: row for row in rows}
     rows_by_id["T001"]["label"] = "NETWORK_API"
@@ -57,7 +57,7 @@ def write_frozen_dataset_with_changed_label(path):
 def test_evaluation_rejects_label_change_after_predictions_exist(tmp_path):
     predictions_path = tmp_path / "predictions.csv"
     write_predictions(predictions_path, [prediction_row("T001", "CODE_RUNTIME")])
-    dataset_path = write_frozen_dataset_with_changed_label(tmp_path / "dataset_v1.csv")
+    dataset_path = write_frozen_dataset_with_changed_label(tmp_path / "dataset_v2.csv")
 
     with pytest.raises(DatasetValidationError, match="fingerprint"):
         evaluate_predictions(
@@ -69,11 +69,11 @@ def test_evaluation_rejects_label_change_after_predictions_exist(tmp_path):
 
 
 def test_evaluation_accepts_frozen_dataset_and_generates_metrics(tmp_path):
-    dataset_path = Path("dataset_v1.csv")
+    dataset_path = Path("dataset_v2.csv")
     predictions_path = tmp_path / "predictions.csv"
     rows = [
         prediction_row("T001", "CODE_RUNTIME"),
-        prediction_row("T002", "NETWORK_API"),
+        prediction_row("T002", "CODE_RUNTIME"),
         prediction_row("T003", INVALID_OUTPUT, raw_output="maybe environment"),
         prediction_row(
             "T004",
@@ -100,12 +100,12 @@ def test_evaluation_accepts_frozen_dataset_and_generates_metrics(tmp_path):
     assert metrics["correct_predictions"] == 1
     assert metrics["accuracy"] == pytest.approx(1 / 3)
     assert metrics["per_class"]["CODE_RUNTIME"] == {
-        "total_samples": 2,
-        "successful_predictions": 2,
+        "total_samples": 1,
+        "successful_predictions": 1,
         "correct_predictions": 1,
-        "accuracy": 0.5,
+        "accuracy": 1.0,
     }
-    assert metrics["per_class"]["NETWORK_API"]["accuracy"] == 0.0
+    assert metrics["per_class"]["ENV_DEPENDENCY"]["accuracy"] == 0.0
 
     saved_metrics = json.loads((output_dir / "metrics.json").read_text(encoding="utf-8"))
     assert saved_metrics == metrics
@@ -116,16 +116,15 @@ def test_evaluation_accepts_frozen_dataset_and_generates_metrics(tmp_path):
         INVALID_OUTPUT,
         API_STATUS_FAILURE,
     ]
-    assert errors[0]["error_text"] == (
-        "json.decoder.JSONDecodeError: Expecting property name enclosed in double quotes "
-        "at line 1 column 2"
-    )
+    with dataset_path.open("r", encoding="utf-8-sig", newline="") as handle:
+        source_rows = {row["id"]: row for row in csv.DictReader(handle)}
+    assert errors[0]["error_text"] == source_rows["T001"]["error_text"]
     assert errors[1]["raw_output"] == "maybe environment"
     assert errors[2]["api_error"] == "TimeoutError: timed out"
 
 
 def test_evaluation_requires_exactly_one_prediction_for_each_expected_sample(tmp_path):
-    dataset_path = Path("dataset_v1.csv")
+    dataset_path = Path("dataset_v2.csv")
     predictions_path = tmp_path / "predictions.csv"
     write_predictions(predictions_path, [prediction_row("T001", "CODE_RUNTIME")])
 

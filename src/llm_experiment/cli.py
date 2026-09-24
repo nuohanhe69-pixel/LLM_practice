@@ -30,7 +30,7 @@ def build_parser() -> argparse.ArgumentParser:
         type=_positive_int,
         help="Run the same pipeline on the first N test samples in an isolated smoke directory",
     )
-    parser.add_argument("--dataset", type=Path, default=Path("dataset_v1.csv"))
+    parser.add_argument("--dataset", type=Path, default=Path("dataset_v2.csv"))
     parser.add_argument("--model-config", type=Path, default=Path("configs/models.json"))
     parser.add_argument("--prompt-dir", type=Path, default=Path("prompts"))
     parser.add_argument("--results-dir", type=Path, default=Path("results"))

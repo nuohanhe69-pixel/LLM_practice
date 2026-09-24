@@ -1,8 +1,9 @@
 from __future__ import annotations
 
+from pathlib import Path
 from types import SimpleNamespace
 
-from llm_experiment.cli import main
+from llm_experiment.cli import build_parser, main
 
 
 def experiment_result(tmp_path, *, api_failures):
@@ -16,6 +17,10 @@ def experiment_result(tmp_path, *, api_failures):
 
 def cli_args():
     return ["--model", "qwen_test", "--prompt-type", "zero_shot", "--run-id", "1"]
+
+
+def test_cli_defaults_to_frozen_dataset_v2():
+    assert build_parser().parse_args(cli_args()).dataset == Path("dataset_v2.csv")
 
 
 def test_cli_reports_incomplete_experiment_when_api_failures_remain(monkeypatch, capsys, tmp_path):

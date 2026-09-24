@@ -1,0 +1,457 @@
+﻿id,error_text,label,reason,source_type,source_reference,split
+D001,requests.exceptions.ConnectionError: Failed to establish a new connection: [Errno 61] Connection refused,NETWORK_API,The remote endpoint cannot be reached because the connection is refused; the primary failure is network/service communication.,PUBLIC_CASE,Requests documentation - Quickstart / Errors and Exceptions: https://requests.readthedocs.io/en/latest/user/quickstart/,demo
+D002,"requests.exceptions.Timeout: HTTPConnectionPool(host='api.example.com', port=80): Read timed out.",NETWORK_API,"The request timed out while waiting for the remote service, which is a network/API communication failure.",PUBLIC_CASE,Requests documentation - Quickstart / Errors and Exceptions: https://requests.readthedocs.io/en/latest/user/quickstart/,demo
+D003,HTTP 413 Payload Too Large: request body exceeds the server's maximum accepted size.,CONTEXT_LIMIT,"The request itself is larger than the server accepts; under this project taxonomy, request/input size overflow belongs to CONTEXT_LIMIT.",PUBLIC_CASE,MDN - 413 Content Too Large: https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/413,demo
+D004,"Context length exceeded: this model supports at most 8192 tokens, but the request contains 9347 tokens.",CONTEXT_LIMIT,The tokenized request exceeds the model's context window.,SYNTHETIC,Derived from common LLM context-window limit error pattern.,demo
+D005,ModuleNotFoundError: No module named 'langchain',ENV_DEPENDENCY,"Python cannot locate a required installed module, so the root cause is a missing dependency/environment setup.",PUBLIC_CASE,Python documentation - Built-in Exceptions: https://docs.python.org/3/library/exceptions.html,demo
+D006,ERROR: Cannot install package_a and package_b because these package versions have conflicting dependencies.,ENV_DEPENDENCY,"The requested packages have incompatible dependency constraints, which is an environment/dependency resolution problem.",PUBLIC_CASE,pip documentation - Dependency Resolution: https://pip.pypa.io/en/stable/topics/dependency-resolution/,demo
+D007,"TypeError: expected str, got NoneType",CODE_RUNTIME,The running code passed a value of the wrong type; this is a program runtime error rather than an environment or communication failure.,SYNTHETIC,Derived from Python TypeError semantics documented in Python built-in exceptions.,demo
+D008,KeyError: 'messages',CODE_RUNTIME,The program attempted to access a missing mapping key during execution.,PUBLIC_CASE,Python documentation - Built-in Exceptions: https://docs.python.org/3/library/exceptions.html,demo
+T001,"workflow=rag_agent_601 KeyError vector_store_p17 at retriever_factory registry[provider]
+entry-point scan agent.plugins candidate=vector_store_p17 discovered=true implementation_import=completed
+candidate descriptor_format=pm2 provider_key=vector_store_p17 capabilities=[dense_search,batch_query]
+discovery_core=dc18 lookup=provider_id value=<absent> validation=SKIPPED
+registry names=local_memory,http_search,sql_store
+smoke candidate=vector_store_p17 descriptor=pm2 discovery_core=dc24 registered=true retriever_initialized=true
+contract snapshot dc18 expected_metadata_key=provider_id; pm2 descriptor_key=provider_key; dc24 accepts provider_key",ENV_DEPENDENCY,插件实体已发现，但依赖发现组件对 metadata 字段契约不兼容，候选被跳过。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=E-R-03; evidence_pattern=plugin_metadata_discovery_contract,test
+T002,"job=rag_519 retrieval_block hash=H81 serialization_region=R17
+state merge /context/retrieved source=H81 region=R17; /context/tool_context source=H81 region=R17
+serializer output: R01 system, R08 history, R17 retrieval block, R22 tools
+app preflight ledger: /context/retrieved region=R17; /context/tool_context region=R17
+ContextLimitError request footprint above local budget; provider_req=<none>
+preflight build=ledger_42 job=rag_519 serialized_regions=unchanged R17_count=once local_admission=complete provider_response=returned
+serializer contract=emit_unique_region; application preflight counting_scope=state_path",CODE_RUNTIME,应用按 state path 而非最终序列化区域计量，导致同一 R17 重复计入；非跨依赖契约问题。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=R-C-03; evidence_pattern=serialized_region_vs_state_path_alias,test
+T003,"vision-agent request=v_219: images=4 detail=high; client: GatewayTimeout before first assistant event
+provider v_219: request_body=complete; image_decode=4/4; multimodal_sequence=constructed; worker=w_819 inference_started=14:08:02
+edge e17: first_response_wait_window=30s client_connection_closed=14:08:31
+provider v_219: first_event_generated=14:08:42 inference_completed=14:08:58
+incident replay ingress=w04 (first_response_wait_window=75s), input_fingerprint=v_219: assistant response completed
+one/two-image requests on e17 typically emit first event before 30s
+provider worker allocation v_219: compiled_input_units=24172 output_reserve=1024 descriptor=md_19; multimodal sequence prepared and inference entered",NETWORK_API,多图输入确实需要更长处理时间，但容量准入已完成，失败在入口首字节等待策略。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=N-C-04; evidence_pattern=first_byte_timeout_after_admission,test
+T004,"session=agent_profile_501 node-a generation_mode=research output_reserve=large source=workspace_bundle_v7; node-b mode=compact output_reserve=small source=workspace_bundle_v9
+messages_hash=187c... tools_hash=c27a... schema_hash=03ef...
+node-a research_full: connection closed before inference; provider request_parsed profile_applied sequence_admission_stopped
+node-b compact_full: sequence_admission=completed HTTP=200
+node-c workspace_bundle_v7 research history_compaction=sum_74 messages_hash=4e92... tools_hash=c27a... schema_hash=03ef... response_complete
+provider accounting research_full prepared_input=30780 reserved_output=4096; descriptor=md_22; registry md_22 capacity=32768",CONTEXT_LIMIT,研究生成模式的大输出预留与完整上下文的组合确实触发 provider 模型容量约束。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=C-E-05; evidence_pattern=generation_reserve_interaction,test
+T005,"session=s_991 turn=18 selected_model=model-small budget_record=b17 result=complete
+turn=19 router selected_model=model-large route_rev=88 messages_hash=841c... tools_hash=cc21...
+budget_checker active_model=model-large budget_record=b17 budget_record.model=model-small
+ContextLimitError request exceeds active model window; provider_request_id=<none>
+registry model-small=b17 model-large=b24
+turn=20 selected_model=model-large route_rev=89 budget_record=b24 messages_hash=841c... tools_hash=cc21... provider assistant_response=returned
+package_snapshot=unchanged model_registry_revision=unchanged",CODE_RUNTIME,应用切换模型时未同步更新预算记录，依赖和模型真实容量均可用。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=R-C-05; evidence_pattern=model_routing_budget_record_mismatch,test
+T006,"workstation: tokenizer native extension unavailable; fallback=python
+container: tokenizer native extension loaded
+full_7a12 history_rev=91 tools_rev=14: workstation failed_before_inference; container failed_before_inference
+short_6c20 history_rev=92 tools_rev=14: workstation response_complete; container response_complete
+segment_3d11 removed history entries alone: workstation response_complete; container response_complete
+provider full_7a12: request_accepted=true assembled_units=32300 reserve_for_generation=1024 sequence_descriptor=md_22 worker_not_allocated=true
+model registry md_22: capacity=32768",CONTEXT_LIMIT,原生 tokenizer 扩展 warning 与失败无因果关联，同一较大请求触发 provider 容量约束。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=C-E-03; evidence_pattern=request_runtime_two_by_two,test
+T007,"job=agent_startup_819
+startup: UnsupportedDependencyVersion: model-client release outside configured range
+installation record: distribution=model-client/2.4.1+arm64; loaded module=2.4.1; manifest=mc819
+runtime capability probe mc819: create_completion=available stream_completion=available
+release metadata from admin UI: label=2.4-LTS channel=stable
+app gate trace: input_ref=metadata.labels.release; raw_input=2.4-LTS; normalized=2.4; rule_branch=legacy_range; result=blocked
+integration smoke artifact mc819: initialized=true streaming_call=finished; package_digest=73c8...
+startup replay: manifest=mc819 package_digest=73c8...; app gate config input_ref=runtime.module_release; raw_input=2.4.1; rule_branch=supported; agent_initialized=true",CODE_RUNTIME,环境真实能力满足要求，但应用兼容性检查误用展示版本字段导致假拒绝。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=R-E-03; evidence_pattern=application_version_guard_wrong_source,test
+T008,"task=stream_agent_118: RemoteProtocolError: peer closed before response body completed
+provider req=req_81a: generation=complete; edge req_81a upstream_bytes=18432 downstream_bytes=18432 close=normal body_sha256=91be...
+client capture req_81a: wire_bytes=18432 body_sha256=91be...
+process snapshot: client_core=c48 transport_core=t19 stream_adapter=sa24
+transport event log req_81a: last_body_fragment=delivered terminal_event=stream_closed
+client stream state req_81a: expected_terminal_event=body_complete terminal_event_received=false
+integration fixture f_stream_12: client_core=c43 transport_core=t19 stream_state=complete
+integration fixture f_stream_12: client_core=c48 transport_core=t23 stream_state=complete",ENV_DEPENDENCY,客户端与网关保存的内容完整；特定跨组件流终止事件契约无法满足。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=E-N-02; evidence_pattern=stream_terminal_contract,test
+T009,"agent-worker req=tls_41 endpoint=api.provider.example; outbound interface and host namespace unchanged
+r1: wrapper=w17 tls_runtime=t31 tcp=connected server_hello=received tls=complete HTTP=200
+r2: wrapper=w24 tls_runtime=t31 tcp=connected server_hello=received extension_processing=stopped HTTP_bytes_sent=0 ConnectionError
+r3: wrapper=w24 tls_runtime=t42 tcp=connected server_hello=received tls=complete HTTP=200
+system curl from r2 host: TLS complete HTTP=200
+artifact_sha256 (all runs)=req_7aa...",ENV_DEPENDENCY,仅特定 wrapper 与 TLS runtime 组合无法完成协商，远端链路和请求本身可用。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=E-N-01; evidence_pattern=tls_wrapper_runtime_interaction,test
+T010,"job=model_adapter_215
+package snapshot: model-client=mc18 provider-adapter=pa18 checksum=75ab...
+user config: reasoning=medium
+startup failure: TypeError: unexpected keyword argument 'reasoning_effort' at ChatAdapter construction
+config parser event c_215: canonical.reasoning=medium provenance=user.reasoning
+option trace event o_215: input_ref=c_215; transformation_owner=project.provider_wrapper; vendor_alias_export=enabled
+constructor capture: reasoning=medium; provider_options.reasoning_effort=medium
+isolated integration fixture i_215: mc18+pa18 options.reasoning=medium client_created=true request=complete
+workflow replay build=wrapper_216: package checksum=75ab... config_digest unchanged; vendor_alias_export=disabled; client_created=true",CODE_RUNTIME,相同依赖使用合法接口正常；非法字段在进入依赖之前由应用 wrapper 生成。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=R-E-04; evidence_pattern=application_wrapper_argument_provenance,test
+T011,"vision-agent incident v_307: 4 images, detail=high; client connection closed with no assistant message
+attachment gateway v_307: transfer_finished=true content_length_checked=true upload_policy=accepted
+image worker artifact decode/v_307: image_1 decoded; image_2 decoded; image_3 decoded; image_4 decoded; invalid_images=0
+provider request v_307: request_schema=accepted image_preprocess=completed descriptor_id=md_19
+sequence planner v_307: accounting_scope=text+visual+generation_reservation admission_rule=joint_sequence_v3 admission_result=blocked worker_allocation=<none>
+request v_308: same 4 images detail=low; sequence_planner=accepted worker_allocated=true assistant_event=received
+request v_309: 2 images detail=high; sequence_planner=accepted worker_allocated=true assistant_event=received
+request v_310: 4 unrelated images detail=high; decoded_images=4 admission_rule=joint_sequence_v3 admission_result=blocked worker_allocation=<none>
+network trace v_307: request body forwarded completely; no mid-upload reset",CONTEXT_LIMIT,入口完整接收且全部图像解码；需跨网关、模型注册表、文字+视觉+输出预留的统一容量和复现记录定位多模态序列约束。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=C-N-03; evidence_pattern=multimodal_sequence_accounting,test
+T012,"stream=s_552 watchdog_idle_limit=8s
+socket telemetry: 15:41:00.118 bytes_in=412; 15:41:02.301 bytes_in=386; 15:41:04.622 bytes_in=401; 15:41:06.901 bytes_in=377; 15:41:09.204 bytes_in=419
+application: 15:41:00.120 on_chunk seq=1; .123 start rerank_documents; 15:41:10.811 end rerank_documents
+15:41:10.812 watchdog observed_idle=10.692s; TimeoutError model stream inactive
+rerank_documents execution=sync thread=event-loop cpu_time=10.68s
+provider stream closed after client cancellation",CODE_RUNTIME,Socket 一直收到字节，本地同步运算占据事件循环，导致客户端错误感知 stream idle。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=R-N-05; evidence_pattern=socket_activity_vs_event_loop_starvation,test
+T013,"session=agent_884 request_hash=98fa...
+retry middleware depth=1,2,3,...,987 all request_hash=98fa... model_result=<none>
+Traceback RecursionError: maximum recursion depth exceeded
+provider req=98fa... request_structure=accepted final_sequence_preparation=stopped model_execution=<none>
+provider req=98fa... input_units=31610 completion_reservation=2048 model_ref=md_22; registry md_22 capacity=32768
+retry_iterative_14 request_hash=98fa... attempt=1 model_result=<none> recursion=<none>
+request_hash=22be... history_artifact=sum_104 original_retry_build: attempt=1 model_result=assistant_771 retry_not_entered=true",CONTEXT_LIMIT,真实容量失败使模型结果一直缺失，递归重试放大为次生 RecursionError。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=C-C-05; evidence_pattern=retry_recursion_secondary_to_capacity,test
+T014,"req=req_711 client_timeout=20s
+provider request accepted@16:08:31.202 inference@16:08:32.901 chunks e1@16:08:35.113 e2@16:08:38.482 final@16:08:47
+edge forwarded e1@16:08:35.118 e2@16:08:38.488; last_forwarded@16:08:38.489 bytes=771
+client e1@16:08:35.121 e2@16:08:38.491; timeout_timer@16:08:58.502 cancel@.503; TimeoutError
+second client on failing ingress: last_response_byte@16:08:38",NETWORK_API,真实响应交付先中断，计时器到期后才产生正常取消。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=N-R-05; evidence_pattern=delivery_gap_before_timeout,test
+T015,"case=token_count_207 host-a tokenizer=t17 assets=tok_54c estimate=estimate_a; container-b tokenizer=t22 assets=tok_71f estimate=estimate_b; estimate_a != estimate_b
+artifact messages_sha256=71b9... tools_sha256=229a... body_sha256=c603...
+host-a c603: provider request_parsed; final_chat_built; admission=failed_before_inference
+container-b c603: provider request_parsed; final_chat_built; admission=failed_before_inference
+provider c603: prepared_units=32112 requested_generation=1024 model_limit_ref=md_22
+model registry md_22: capacity=32768
+summary_job=s_81 sha256=204e...: provider sequence_admission=completed assistant_response=returned
+summary segment alone: provider accepted",CONTEXT_LIMIT,不同客户端 tokenizer 估计不一致，但同一 provider 最终表示确实超出序列容量。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=C-E-02; evidence_pattern=provider_final_representation,test
+T016,"trace_group=tg_442
+branch-a selected_provider=p_alpha endpoint=https://alpha.api.example/v1 request=a_218
+branch-b selected_provider=p_beta endpoint=https://beta.api.example/v1 request=b_904
+router 11:28:03.101 branch-a selected=p_alpha; .102 active_endpoint=alpha.api.example/v1
+router 11:28:03.107 branch-b selected=p_beta; .108 active_endpoint=beta.api.example/v1
+router 11:28:03.110 branch-a outbound provider=p_alpha endpoint=https://beta.api.example/v1
+response: {""error"":""model alpha-chat not found on this endpoint""}
+health alpha /v1/models: alpha-chat available; beta /v1/models: beta-chat available
+serialized a_218 model=alpha-chat; endpoint state is shared by branches",CODE_RUNTIME,应用共享路由状态污染导致模型请求发送至另一个健康端点。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=R-N-03; evidence_pattern=shared_routing_state_provenance,test
+T017,"req=chat_733 session_rev=51
+provider req=chat_733: schema_check=completed tools_check=completed; request_accounting prepared_input_units=31872 reserved_output_units=2048 request_model_ref=md_22
+registry md_22 total_sequence_capacity=32768; execution_record=<none>
+response metadata req=chat_733 body_kind=error provider_trace=pv_733
+wrapper rev=27 target=ChatCompletion: ValidationError choices Field required
+wrapper rev=31 req=chat_733 target=ErrorResponse: validation=ok error_preserved=true model_completion=<none>
+req=chat_734 session_rev=52 summary_artifact=sum_28: inference_started=true assistant_response=returned",CONTEXT_LIMIT,真实容量拒绝先导致 error envelope，旧 wrapper 又按正常 ChatCompletion 解析。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=C-C-02; evidence_pattern=secondary_schema_validation_after_capacity,test
+T018,"run=tool_agent_317 tool=search_81 tool_worker status=success result_bytes=41822 result_sha256=11fa... records=137
+agent messages_rev=303 tool_result_id=search_81 append_mode=full; next_model_req=m_318
+client ToolExecutionError: agent failed after tool search_81
+provider m_318 parsed=true tool_result_accepted=true final_sequence_preparation=stopped worker=<none>
+provider capacity ledger m_318: previous_history_units=19711, full_tool_result_units=13982, generation_reservation=1024; reservation_model_ref=md_22
+registry md_22 total_sequence_capacity=32768
+run=tool_agent_319 result_sha256=11fa... append_mode=reference reference_id=artifact_11fa assistant_response=complete
+fresh_77 append_mode=full result_sha256=11fa... assistant_response=complete",CONTEXT_LIMIT,工具自身成功，全量结果叠加已有历史造成下一模型调用的真实容量失败。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=C-C-03; evidence_pattern=full_tool_result_next_turn_capacity,test
+T019,"req=req_812 timeout_deadline=17:22:14.500
+provider final_event@17:22:14.461 completion=finished
+edge final_event forwarded@17:22:14.468 close=normal
+client transport eof=true@17:22:14.472 response_bytes=9211 sha256=27b4...
+app response_future_callback_queued@17:22:14.473; timeout_queued@.500; timeout entered@.501 task_cancelled@.502; response callback@.504 completion_discarded=cancelled
+TimeoutError request exceeded deadline
+scheduler patch trace: response callback processed before timer, task_state=completed timer_skipped=true",CODE_RUNTIME,响应进入客户端后，本地 callback 顺序导致错误取消；网络交付完整。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=R-N-01; evidence_pattern=callback_race_after_full_response,test
+T020,"2026-09-23T10:14:28.104Z provider req=pr_7c91 completion_state=finished response_sha256=8fd1... response_bytes=12684
+2026-09-23T10:14:28.111Z edge req=pr_7c91 upstream_bytes=12684
+2026-09-23T10:14:28.137Z edge req=pr_7c91 downstream_bytes=8192 close_reason=peer_reset
+worker=agent-12 req=pr_7c91 received_bytes=8192
+Traceback response_parser.py:63 json.loads(raw)
+json.decoder.JSONDecodeError: Unterminated string at line 1 column 8149
+parser fixture: response_complete_8fd1.json bytes=12684 parsed=ok choices=1
+client artifact response_req_pr_7c91.bin bytes=8192 sha256=61a0...",NETWORK_API,provider 和 edge 上游完整，edge 下游与客户端仅收到前缀，解析异常是次生表现。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=N-R-01; evidence_pattern=upstream_downstream_byte_provenance,test
+T021,"incident=agent_174 local-7 python=3.12.4 sdk=sdk_281 tokenizer=tok_91; ci-12 python=3.11.9 sdk=sdk_264 tokenizer=tok_84
+req=full_local local-7 sha256=18c4... closed_before_response
+req=full_ci ci-12 sha256=18c4... closed_before_response
+req=compact_local local-7 sha256=49a1... HTTP 200
+req=compact_ci ci-12 sha256=49a1... HTTP 200
+provider 18c4: request_schema=accepted chat_template=generated tool_definitions=attached
+provider 18c4: assembled_units=31502 generation_reservation=2048 model_limit_ref=md_22 worker=not_allocated
+model registry md_22 capacity=32768
+provider 49a1: sequence_assembly=completed inference=started",CONTEXT_LIMIT,不同运行时对相同完整请求同样在序列准入失败；紧凑请求均可进入推理。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=C-E-01; evidence_pattern=request_runtime_orthogonality,test
+T022,"conversation=agent_441; local tokenizer: estimated input within configured budget
+client: ReadError: peer closed before completion
+provider req=rs_441: message_schema=accepted tool_schema=accepted chat_template=applied structured_wrapper=applied
+provider accounting rs_441: prepared_input_units=31980 requested_output_reserve=1024 descriptor=md_22 worker_id=<none>
+model descriptor md_22: sequence_capacity=32768
+req=rs_442: semantically equivalent compact tool descriptions, original history retained; prepared_input_units=30190 output_reserve=1024 assistant_response=complete
+req=rs_443: same compact tool descriptions plus unrelated trace block, full history; prepared_input_units=32004 output_reserve=1024 worker_id=<none>",CONTEXT_LIMIT,本地估算对象不是 provider 模板/工具/结构化包装后的最终序列。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=C-N-04; evidence_pattern=provider_chat_template_representation,test
+T023,"trace_id=agent_611 state_rev=84 messages_rev=118
+09:18:21.401 model_enter; provider req=p_611 schema=accepted tools=accepted request=assembled worker=not_scheduled
+provider record p_611: input_units=30921 reserved_completion=3072 input_descriptor=md_22
+model registry md_22 total_sequence_capacity=32768; inference worker=<none> generated_tokens=0
+09:18:21.431 model_exit assistant_message=<absent>
+09:18:21.432 answer_router state_rev=84: KeyError 'assistant_message'
+router_safe_14 req=p_611: missing-key exception suppressed; model_result=<absent>
+req=p_612 messages_rev=119 state_rev=85 summary_artifact=sum_41: worker=scheduled assistant_message_id=msg_908 answer_router=complete",CONTEXT_LIMIT,请求容量先失败，KeyError 是路由器处理不存在模型结果的次生错误。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=C-C-01; evidence_pattern=secondary_router_keyerror_after_capacity,test
+T024,"issue=req_551; payload_sha256=5f18...; semantic payload unchanged across transport experiments
+agent uploader: transfer_mode=chunked; WriteError: connection closed while sending
+edge e17 req_551: request parser not reached; downstream connection ended during transfer
+run req_552 payload_sha256=5f18...: transfer_mode=content-length body_materialized=true provider_response=complete
+smaller diagnostic body sha256=1f11...: chunked over e17 also reproduced the interrupted-transfer symptom
+same diagnostic body via content-length: provider_response=complete",NETWORK_API,改变传输 framing（而非请求内容或容量）改变故障行为，小请求也可触发原传输路径故障。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=N-C-05; evidence_pattern=transfer_framing,test
+T025,"ticket=prod_only_442 prod python=3.12 sdk=sdk_291; smoke python=3.11 sdk=sdk_266
+prod messages=91a0... tools=4c18... response_schema=aa71... request_fingerprint=prod_814 client=ReadError
+smoke messages=91a0... tools=<none> schema=<none> fingerprint=smoke_221 HTTP=200
+smoke replay prod_814: failed_before_inference
+prod replay smoke_221: HTTP=200
+provider prod_814: message_validated=true tools_validated=true structured_wrapper_applied=true
+provider prod_814: sequence_units=31740 reserved_generation=2048 request_model_ref=md_22 worker=<none>
+registry md_22 capacity=32768",CONTEXT_LIMIT,失败追随不同请求构造路径，不随 Python/SDK 环境，真实最终输入+预留需求超容量。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=C-E-04; evidence_pattern=request_fingerprint_swap,test
+T026,"POST /v1/files-and-chat, multipart body_sha256=6db2...; parts: manifest, document-a, document-b, document-c
+upload attempt=1 ingress=e17: a=complete b=complete c=41%; connection_reset=true
+upload attempt=2 ingress=e17: a=complete b=complete c=68%; connection_reset=true
+upload attempt=3 ingress=e17: a=complete b=93%; connection_reset=true
+edge e17 transfer records: variable_last_ack_offset=true admission_decision=<none> response_code=<none>
+transfer replay ingress=w04 body_sha256=6db2...: all parts parsed; provider request_id=p_103; assistant response complete
+small multipart e17: normally accepted",NETWORK_API,多次尝试没有固定上传大小截点，同一 multipart body 在另一入口可完整接收。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=N-C-03; evidence_pattern=variable_upload_offset,test
+T027,"stream=302 Content-Encoding=gzip
+provider: generation=complete; edge: downstream_bytes=42184 body_sha256=8af1... close=normal
+client capture: bytes=42184 body_sha256=8af1...; independent gzip integrity=valid
+worker stack: http_core=h51 decoder=d14 ContentDecodingError: final state never reached
+http_core h51 trace stream=302: reader_output_mode=decoded
+decoder d14 startup: decoder_input_contract=gzip_encoded
+integration h42+d14 on fixture stream_302=complete
+integration h51+d22 on fixture stream_302=complete
+provider stream_302: output_reserve=1024 sequence_preparation=complete inference=complete",ENV_DEPENDENCY,线上压缩响应完整，特定 HTTP 组件与 decoder 的输入表示契约不兼容。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=E-N-05; evidence_pattern=encoded_decoded_boundary_contract,test
+T028,"conv_661 state_rev=210 generation_mode=deliberate output_reserve=large req_661 client=TimeoutError
+provider req_661 request_parsed=true response_schema=accepted generation_settings=applied sequence_admission=not_completed worker=<none>
+provider req_661 assembled_units=30900 output_reserved=4096 model_ref=md_22; registry md_22 total_capacity=32768
+conv_661 state_rev=210 mode=compact output_reserve=small req_662 sequence_admission=completed response=returned
+conv_661 state_rev=211 compaction_artifact=sum_74 mode=deliberate output_reserve=large req_663 sequence_admission=completed response=returned
+timeout wrapper tw_29 req_661: upstream_rejection surfaced immediately; TimeoutError=<none> completion=<none>",CONTEXT_LIMIT,真实的 full conversation × 输出预留触发序列容量，修 timeout wrapper 仅改变表面异常。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=C-C-04; evidence_pattern=generation_setting_capacity_interaction,test
+T029,"task=native_backend_118
+host probe: platform=darwin machine=arm64 python=3.12
+worker startup: ImportError dlopen failed: mach-o incompatible architecture; requested artifact_ref=bin_07
+installer manifest release=r91: bin_07=plugins/native_core_07.so, macho_cpu=X86_64; bin_11=plugins/native_core_11.so, macho_cpu=ARM64; verification=both_present
+startup selection trace: os_key=darwin; raw_arch=arm64; arch_normalized=aarch64; routing_table=arch_selector_v4; chosen=bin_07
+loader self-test job=native_diag_05: requested=bin_11 loaded=true inference_fixture=passed
+startup replay native_backend_119: package_digest unchanged; arch_selector mapping revision=5 chosen=bin_11; backend_initialized=true",CODE_RUNTIME,运行时具备正确 artifact，应用平台别名映射选择错误目标。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=R-E-05; evidence_pattern=application_platform_artifact_selection,test
+T030,"incident completion_772 target=api.provider.example:443
+worker-17 python=3.11.9 tls_fingerprint=7d31... ingress=e17: tcp_connected=true client_hello_sent=true server_hello_seen=false ConnectionError
+worker-22 python=3.12.4 tls_fingerprint=b821... ingress=e17: tcp_connected=true client_hello_sent=true server_hello_seen=false ConnectionError
+worker-17 process_digest=img_17 ingress=w04: tls_handshake=complete HTTP=200
+worker-22 process_digest=img_22 ingress=w04: tls_handshake=complete HTTP=200
+incident note: credentials, provider hostname and request hash stayed fixed within each worker's rerun",NETWORK_API,两个运行时差异存在，但失败随 ingress 而非运行时变化。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=N-E-01; evidence_pattern=tls_route_following,test
+T031,"ci-42: python=3.12 sdk_fingerprint=8c1...
+dev-31: python=3.11 sdk_fingerprint=44a...
+body_sha256=0f41... credentials_ref=cred_8
+location=east: ci-42 connection_reset_before_headers=true; dev-31 connection_reset_before_headers=true
+location=west: ci-42 HTTP=200; dev-31 HTTP=200
+egress east=edge_group_e17 (edge trace: upstream_connection_reset)
+egress west=edge_group_w04 (edge trace: upstream_request=complete)
+No package changes occurred during the deployment swap.
+request tracing: app client configuration unchanged within each deployment image; egress edge_group differs",NETWORK_API,不同运行镜像的结果均随网络出口位置切换，入口上游连接复位。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=N-E-04; evidence_pattern=deployment_location_factor_swap,test
+T032,"worker req=chat_991
+pydantic.ValidationError: ChatCompletion choices Field required
+raw response body: {""error"":""upstream response unavailable"",""trace_id"":""edge_771"",""retryable"":true}
+response metadata: x-edge-trace=edge_771; x-provider-request-id=<absent>
+edge trace=edge_771: upstream connection opened; response headers not obtained; connection terminated; error envelope generated
+provider completion index req=chat_991: record=<none>
+wrapper: response_type=unknown; target_model=ChatCompletion; validation_started",NETWORK_API,在 ChatCompletion 验证前，远端网关已经因上游通信失败生成错误信封。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=N-R-03; evidence_pattern=edge_error_envelope_provenance,test
+T033,"proxy_agent_87: startup warning about older optional transport metadata; ProxyError: tunnel closed before provider request
+transport req=p_87: proxy DNS resolved; TCP connected to proxy.internal:1080; negotiation=complete; CONNECT transmitted
+proxy log p_87: upstream_connection_failed; no provider tunnel opened
+request p_88 pid=4118 warning_present=true proxy=proxy-backup.internal:1080: CONNECT complete provider HTTP=200
+worker pid=4191 warning_present=false proxy=proxy.internal:1080: CONNECT received upstream_connection_failed
+Direct HTTPS to provider completed in the original process.",NETWORK_API,代理/上游路径返回真实建立失败，同一 warning 是否存在不能解释成败。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=N-E-02; evidence_pattern=proxy_upstream_response,test
+T034,"req=chat_1847 model=agent-model-x
+agent debug: history_json=7.9MiB tool_bundle=3.4MiB attachments=1.2MiB
+builder: body_sha256=7be9... content_encoding=gzip wire_body_bytes=7421186
+edge ingress=e17 req=chat_1847: request_body_received=7421186 forwarded_request_id=up_91f2
+provider up_91f2: request_parse=completed model_run=completed response_bytes=28641
+edge e17 up_91f2: upstream_bytes=28641 downstream_bytes=11904 close_reason=upstream_to_downstream_reset
+worker chat_1847: received_bytes=11904 RemoteProtocolError: response ended before completion
+incident follow-up, ingress=w04 body_sha256=7be9...: response_events=complete",NETWORK_API,逻辑大小与线上编码大小不同；请求完成处理后，某入口的响应转发未完成。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=N-C-01; evidence_pattern=representation_and_delivery,test
+T035,"case=native_tokenizer_316 p41 python=3.12 tokenizer=t19 assets=tok_911 engine=python: compaction rounds=2 unable to fit conversation
+fixture markers_21 contains role/tool markers empty assistant; p41 segmentation=seg_a19
+p52 python=3.11 tokenizer=t19 assets=tok_911 engine=native: fixture=seg_c44, original_conversation=accepted provider_response=complete
+p63 python=3.12 tokenizer=t21 assets=tok_911 engine=native: fixture=seg_c44, original_conversation=accepted provider_response=complete
+provider tokenizer markers_21=seg_c44; plain fixture p41=seg_p08 provider=seg_p08
+runtime capability note: t19 native loader compiled ABI for py3.11, t21 build includes py3.12 native loader",ENV_DEPENDENCY,Python-runtime 与原生 tokenizer 能力的特定组合导致 fallback 语义偏差，本地假容量判断。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=E-C-05; evidence_pattern=python_native_fallback_interaction,test
+T036,"task=async_agent_81 agent_work=complete provider_response=received assistant_message=persisted
+shutdown tool_pool=closed model_client=close_requested
+Traceback transport_cleanup.py:143 loop.call_soon(self._finalize) -> RuntimeError Event loop is closed
+run1041 python=3.12 async_transport=at17 shutdown=failed
+run1042 python=3.11 async_transport=at17 shutdown=complete
+run1043 python=3.12 async_transport=at24 shutdown=complete
+run1044 python=3.11 async_transport=at24 shutdown=complete
+application_shutdown_order_hash=41e8... across runs; failure_origin=transport_cleanup callback before returning to app cleanup
+transport release manifest: at17 loop-cleanup policy targets py3.11 lifecycle; at24 targets py3.11/py3.12",ENV_DEPENDENCY,特定 Python runtime × async transport 生命周期契约组合异常，应用关闭顺序保持不变。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=E-R-04; evidence_pattern=runtime_async_transport_lifecycle_interaction,test
+T037,"job=profile_resolve_73 descriptor=d827 schema=cap-v3 keys=[model,limits,features]
+resolver r31 lookup=model.context_window result=missing selected_local_budget_record=default-small
+local admission: conversation does not fit selected model; dispatch not_started
+fixture d826 schema=cap-v2 resolver=r31 lookup=model.context_window resolved; local_admission=accepted
+worker-46 d827 schema=cap-v3 resolver=r46 lookup=limits.input_window resolved; local_admission=accepted provider_response=complete
+provider diagnostic request on original body: request_accepted=true model_execution=completed
+r31 loader descriptor contract=cap-v2; r46 descriptor contract=cap-v3",ENV_DEPENDENCY,本地 resolver 对 descriptor 的字段路径契约落后，silent fallback 造成虚假 context 失败。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=E-C-03; evidence_pattern=silent_fallback_descriptor_schema,test
+T038,"workflow=rag_agent_703 PluginNotFound vector_store_p17 not available
+plugin discovery: candidate=vector_store_p17 metadata_loaded=true import=completed registered=true
+app request_mode=vector mode_revision=51
+capability_filter candidate=vector_store_p17 filter_state_revision=50 filter_mode=keyword candidate_supported=false
+available retrievers=local_memory,http_search
+mode_revision=51 filter_state_revision=51 filter_mode=vector: candidate_supported=true retriever_initialized=true model_request_completed=true",CODE_RUNTIME,插件依赖注册成功，但应用自己的过滤状态落后于当前模式。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=R-E-02; evidence_pattern=post_discovery_application_filter_state,test
+T039,"target=api.provider.example
+worker-a resolver_core=r18: NameResolutionError
+worker-b resolver_core=r27: NameResolutionError
+pcap for both: query A api.provider.example -> DNS service 10.0.0.53; response rcode=SERVFAIL answer_count=0
+worker-a resolver_service=10.0.0.71 (package unchanged): response rcode=NOERROR answer_count=1; provider request HTTP=200",NETWORK_API,不同 resolver 组件均接到上游 SERVFAIL，切换 DNS 服务后原组件成功。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=N-E-03; evidence_pattern=dns_packet_grounding,test
+T040,"req=upload_628 target=/v1/chat/completions
+09:42:11.006 builder body_rev=18 body_sha256=3cc8... framing_rev=18
+09:42:11.014 middleware redact_debug_fields input_rev=18 output_rev=19 body_sha256=59e2...
+09:42:11.018 transport body_rev=19 framing_rev=18 conn=conn_44
+server conn_44: headers received; request body started; still awaiting remaining body bytes
+09:42:41.021 client ReadTimeout
+upload_629: body_rev=19 body_sha256=59e2... framing_rev=19; server request_complete=true HTTP=200
+packet conn_44: tcp_retransmits=0 reset=0
+request inspection: framing metadata was generated before middleware rewrote serialized bytes
+server received body bytes are valid TCP; stale framing length metadata describes body_rev=18, actual body length follows rev=19",CODE_RUNTIME,程序自身请求体与 framing 版本不一致导致远端等待，非网络传输丢包。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=R-N-04; evidence_pattern=request_revision_framing_lineage,test
+T041,"worker_92 session=s_440 request_usage=1821 session_usage_after=1821 status=completed
+session=s_441 req=r_441 messages_hash=3c81...
+budget trace request_usage=1642 session_usage_before=1821 effective_usage=3463
+SessionBudgetRejected request exceeds remaining session budget; provider_request_id=<none>
+worker restart session=s_441 req=r_442 messages_hash=3c81...
+budget trace request_usage=1642 session_usage_before=0 effective_usage=1642; provider_request_id=p_442 response=complete
+session lifecycle s_440 close_event=emitted budget_reset_event=<absent> s_441 open_event=emitted
+configured_budget_scope=per_session
+session_budget_limit=3000; session reset is specified at each close/open boundary",CODE_RUNTIME,上一个 session 的累计量错误泄漏到新的 session，当前请求未触发真实容量限制。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=R-C-02; evidence_pattern=cross_session_budget_lifetime,test
+T042,"upload=mp_581
+client: ConnectionResetError while final multipart boundary was being written
+client form manifest: manifest.json, document-a.pdf, document-b.pdf, tool-context.json
+edge multipart parser mp_581: section_checks=4/4 final_boundary_seen=true upstream_request_id=<none>
+edge policy snapshot from incident window: policy=ingress_stream_guard scope=wire_stream evaluation=pass
+edge policy snapshot from incident window: policy=multipart_policy_7 scope=aggregate_decoded_sections enforcement_stage=final_boundary evaluation=blocked
+edge transport trace mp_581: tcp_retransmits=0 unexpected_disconnect=false all_multipart_sections_received=true
+upload=mp_582 builder_rev=19 aggregate_representation=reduced multipart_policy_7=pass upstream_request_id=app_582 processing_started=true
+parts replayed individually: manifest.json=accepted document-a.pdf=accepted document-b.pdf=accepted tool-context.json=accepted
+upload=mp_583 section_order=reverse aggregate_representation=original multipart_policy_7=blocked upstream_request_id=<none>",CONTEXT_LIMIT,各部分独立有效且无传输异常；需要在入口两项策略中选择最终边界的 aggregate-decoded 约束，并关联汇总测量及重排复现。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=C-N-05; evidence_pattern=multipart_aggregate_accounting,test
+T043,"job=reasoning_agent_92
+user configuration: model=agent-model-x reasoning=medium
+runtime report: normalizer=n32 mapper=m18 adapter=a18
+configuration event c_92: source=user.reasoning; normalized_option=canonical.reasoning; encoding=canonical_v2
+mapper event m_92: input_event=c_92; emitted_options=provider_options.reasoning_effort
+constructor exception: TypeError ChatAdapter.__init__ unexpected keyword argument 'reasoning_effort'
+build manifest n32: output_encoding=canonical_v2; build manifest m18: input_encoding=canonical_legacy; build manifest m32: input_encoding=canonical_v2
+fixture reasoning_medium: n18+m18+a18 client_created=true; n32+m32+a18 client_created=true; app configuration digest unchanged",ENV_DEPENDENCY,应用配置本身有效；跨 normalizer 与 mapper 的参数表示契约不兼容，造成 constructor 异常。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=E-R-02; evidence_pattern=cross_component_option_contract,test
+T044,"2026-09-18 incident #inline-201
+report_bundle.zip submitted with request_mode=inline content_encoding=gzip metadata_rev=11 artifact_sha256=0e72...
+client: BrokenPipeError while sending
+edge transfer record inline_201: request_stream_received=true transfer_policy=pass body_decoder=finished
+decoded request admission inline_201: representation=decoded_request policy=ingress_payload_v4 evaluation=blocked upstream_forwarded=false
+request inline_202: artifact_sha256=0e72... request_mode=inline metadata_rev=12 optional_metadata=reduced
+edge inline_202: transfer_policy=pass decoded_request_policy=pass upstream_forwarded=true completion=received
+request inline_203: artifact_sha256=0e72... request_mode=inline metadata_rev=13 unrelated_trace_fields=restored
+edge inline_203: transfer_policy=pass decoded_request_policy=blocked upstream_forwarded=false
+object-reference submission: artifact_sha256=0e72... request_mode=reference completion=received",CONTEXT_LIMIT,同一附件通过引用模式成功；需跨客户端传输大小、入口适用的 decoded-request 策略、两次附加元数据复现，将 BrokenPipe 定位到真正输入大小约束。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=C-N-02; evidence_pattern=serialized_inline_footprint,test
+T045,"job=request_size_92 serializer=s7 accounting=a3 blob_sha256=a91f...
+serializer manifest contract=region_provenance_v2: R1 source=m71; R2 source=a52 aliases=[artifact_inline,tool_payload]; R3 source=m18
+accounting a3 ledger: artifact_inline source=a52 region=R2; tool_payload source=a52 treated_as_independent=true; total_regions=4
+application RequestSizeError before dispatch
+edge diagnostic blob=a91f... accepted=true provider_response=complete
+integration serializer=s5 accounting=a3 manifest_contract=source_provenance_v1 local_admission=completed
+integration serializer=s7 accounting=a7 manifest_contract=region_provenance_v2 total_regions=3 local_admission=completed
+accounting a3 advertised_input_contract=source_provenance_v1; application builder revision=unchanged",ENV_DEPENDENCY,s7 provenance v2 与 a3 v1 contract 不匹配造成同一区域重复计入；实际请求可被 edge 接受。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=E-C-04; evidence_pattern=serializer_accounting_contract,test
+T046,"conv_772 state_rev=42 history_entries=58@09:51:02.112
+compactor source_rev=42 started@09:51:02.131 completed@09:51:02.176 output_rev=43 summary=sum_92
+request_builder@09:51:02.177 captured_state_rev=42; local_admission@09:51:02.181 state_rev=42 ConversationBudgetRejected
+provider_request_id=<none>
+debug replay builder_state_rev=43 summary=sum_92 local_admission=completed provider_response=returned
+compactor artifact output_rev=43 validation=completed
+same packages and model registry for replay",CODE_RUNTIME,压缩已成功，但应用的 request builder 捕获旧 state revision 导致本地假超限。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=R-C-04; evidence_pattern=stale_compaction_state_snapshot,test
+T047,"task=provider_loader_76 startup provider_id=p17 display_name=""Provider P / Extended""
+Traceback backend_loader.py:116 importlib.import_module(target) -> ModuleNotFoundError: No module named agent_backends.provider_p
+entry-point scan entry_id=p17 module=agent_backends.provider_p17 registered=true
+loader provider_id=p17 normalized_name=provider_p target=agent_backends.provider_p
+module inspection agent_backends.provider_p17: installed=true imported=true backend_id=p17
+loader_77 entry_id=p17 resolved_target=agent_backends.provider_p17 module_loaded=true client_created=true
+loaded dependency installation unchanged",CODE_RUNTIME,依赖及 entry point 正常；应用自己根据展示名称生成错误 import target。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=R-E-01; evidence_pattern=application_generated_wrong_import_target,test
+T048,"job=local_budget_204 history compacted local_admission=rejected model_invocation=not_started
+local tokenizer core=t18 assets=tok_54c fixture=f_19 (system marker, tool-call marker, short user)
+local segmentation fingerprint=seg_31e; provider tokenizer fixture=f_19 fingerprint=seg_b72
+req=agent_204_full body_sha256=4d1e... provider request_accepted=true assistant_response=returned
+worker-18 tokenizer_core=t20 assets=tok_54c: f_19 fingerprint=seg_b72; req=agent_204_full local_admission=completed provider_response=returned
+tokenizer asset manifest: t18 expects asset_format=tok_v1; tok_54c format=tok_v2; t20 supports tok_v2
+provider diagnostic req=agent_204_full: output_reserve=1024 sequence_preparation=complete",ENV_DEPENDENCY,provider 可运行实际请求；本地 core 与 assets 格式不兼容造成错误 token 度量。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=E-C-02; evidence_pattern=tokenizer_core_asset_measurement,test
+T049,"incident=conv_882; streaming agent reports ReadTimeout mainly when long histories are attached.
+client ticket: request=chat_882 body_sha256=4f27... estimated_input=near_local_budget; 12:14:35 ReadTimeout waiting for assistant message.
+edge intake: chat_882 upload=finished; request_format=accepted; queue_ticket=q_882 issued@12:14:04; queue_lane=weighted.
+service scheduler q_882: tenant_slot_group=sg_7 active=8 allowed=8; pending_weight=heavy; processing_started=<none> at 12:14:35.
+model registry md_22: max_request_units=32768; admission precheck chat_882 prepared_units=30210 output_reserve=1024.
+client ticket chat_883 estimated_input=small body_sha256=6e12... queued@12:14:05 lane=light; model response@12:14:10.
+scheduler sg_7: other sessions released slots@12:15:01; ticket q_882 expired at client deadline.
+incident follow-up chat_884: body_sha256=4f27... enqueue@12:16:03 sg_7 active=2; processing@12:16:04 model response@12:16:15.
+client binary/version/config unchanged; no payload compaction performed between chat_882 and chat_884.",NETWORK_API,历史较长与超时相关，但原请求满足模型单次窗口；远端服务的租户调度队列满载，请求排队至客户端超时，负载下降后完全相同 body 成功。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=N-C-02; evidence_pattern=remote_service_queue_scope_vs_model_per_request_window,test
+T050,"trace_group=parallel_882 branch-a assistant=a71 tool_call_id=tool_19; branch-b assistant=b44
+merge_rev=203 output=[assistant(a71,tool_19), assistant(b44), tool_result(tool_19)]
+req_882 estimated_input=within_limit; provider: request_rejected conversation context invalid
+merge_rev=204 output=[assistant(a71,tool_19),tool_result(tool_19),assistant(b44)]; message_contents=unchanged; tool_result=unchanged
+req_883 provider assistant_response=returned
+serial branch-a: tool_call appended; tool_result appended; branch-b resumed
+provider req_882: protocol_order_check=failed ; sequence_budget_check=not_reached
+req_882 provider: output_reserve=1024 protocol_order_check=failed before sequence budget evaluation",CODE_RUNTIME,并行 merge 的 tool call/result 顺序破坏对话协议，而非请求容量超限。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=R-C-01; evidence_pattern=parallel_message_ordering,test
+T051,"agent preflight conv_901: visible_messages=within_local_estimate
+builder rev=18: history=hist_901 retrieval=ret_31 tools=tool_14 response_schema=rs_8
+client: RemoteProtocolError: peer closed connection before response
+provider req=p_901: request_structure=accepted compiled_input_units=31871 output_reserve_units=2048 worker_id=<none>
+model record md_22: total_sequence_capacity=32768
+run p_902: history=hist_902_compact retrieval=ret_31 tools=tool_14 response_schema=rs_8; worker_id=w_91 assistant_event=received
+builder check hist_901 + ret_31 (tools disabled): worker_id=w_93
+builder check hist_901 + tool_14 (retrieval disabled): worker_id=w_94
+app state: retrieval selection=ret_31 request_builder_state_rev=18 across both retries",CONTEXT_LIMIT,本地估算与完整构造的请求不同；全部组件组合后的实际序列需求超出模型容量。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=C-N-01; evidence_pattern=final_request_assembly,test
+T052,"run=proxy_agent_204; proxy=proxy.internal:1080; TCP established
+proxy negotiation session=9af2 protocol=p17 mode=relay auth_state=accepted
+worker-7 transport_plugin=tp16: parsed session=9af2 normalized_mode=legacy_relay tunnel_setup=aborted ProxyError
+proxy log: session=9af2 negotiation_response=sent and accepted
+worker-12 transport_plugin=tp21 proxy_session=9af3: protocol=p17 mode=relay normalized_mode=relay tunnel_established=true provider_HTTP=200
+worker-7 with proxy negotiation protocol=p16: normalized_mode=relay provider HTTP=200",ENV_DEPENDENCY,代理返回合法协商记录，本地传输组件对不同协商契约的解释导致故障。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=E-N-03; evidence_pattern=proxy_negotiation_mapping,test
+T053,"run=registry_case_61 model=agent-model-x messages_sha256=8b17... tools_sha256=21ee... body_sha256=932a...
+provider extension frag_224 alias=agent-model-x limits.input_window=present limits.generation_reserve=present features.tools=true
+registry merge frag_224 merge_revision=mr_48 descriptor alias=agent-model-x input_window=<unset> generation_reserve=<unset> tools=true
+selected_local_record=default; local admission rejects conversation before dispatch
+provider diagnostic body_sha256=932a... request_accepted=true inference_completed=true
+merge_revision=mr_63 fragment_id=frag_224: input_window=resolved generation_reserve=resolved tools=true; body_sha256=932a... local_admission=completed provider_response=returned
+merge build manifest: mr_48 expects fragment_contract=cap_v1 ; extension frag_224 emits fragment_contract=cap_v2; mr_63 expects cap_v2
+provider diagnostic body 932a: output_reserve=1024 request admitted using model descriptor=md_22",ENV_DEPENDENCY,跨 registry 组件的 fragment contract 不一致导致容量元数据静默缺失，本地假拒绝。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=E-C-01; evidence_pattern=capability_fragment_merge_lineage,test
+T054,"job=agent_310
+attempt=1 req=r_801 outbound=14:22:01.110 edge=e_801 result=upstream_reset
+attempt=2 req=r_802 outbound=14:22:02.438 edge=e_802 result=upstream_reset
+attempt=3 req=r_803 outbound=14:22:04.771 edge=e_803 result=service_unavailable
+application RetryError: maximum attempts reached; circuit CLOSED -> OPEN
+edge e_801 upstream connection reset; e_802 upstream connection reset; e_803 upstream unavailable
+job=agent_311 retry_policy_hash=rp_19a edge=w04: attempt=1 req=r_811 HTTP 200 circuit=CLOSED",NETWORK_API,每次重试独立遇到上游连接/服务失败，重试异常和熔断是结果。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=N-R-04; evidence_pattern=primary_network_retry_secondary_state,test
+T055,"job=structured_agent_144 ValidationError tool_result.id Field required
+tool event evt_83 call_id=call_83 tool=search_repository
+producer=sp24 intermediate call_id=call_83 alias_map={call_id:id} content_ref=artifact_83
+validator_adapter=va18 materialized_fields=[call_id,content_ref] canonical_id=<absent>
+adapter fixture sp24+va24 evt_83 canonical_id=call_83 validation=complete
+historical sp18+va18 fixture validation=complete
+schema exchange manifest: sp18 outputs materialized canonical_id; sp24 outputs alias_map metadata; va18 only reads materialized canonical_id",ENV_DEPENDENCY,跨 schema producer 与 validator adapter 的字段表示契约不一致造成后续 ValidationError。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=E-R-05; evidence_pattern=cross_dependency_field_alias_lineage,test
+T056,"job=tool_agent_418 traceback tool_router.py:88 message.tool_calls -> AttributeError GenericAssistantMessage has no tool_calls
+provider event evt_71 payload_sha256=84c2... event_type=assistant.tool_call call_id=call_19
+worker schema_reader=es24 message_adapter=ma17: evt_71 schema_kind=assistant.call; adapter_output_class=GenericAssistantMessage obj=msg_71
+router msg_71 read_tool_calls -> error
+CI artifact payload_sha256=84c2... schema_reader=es24 message_adapter=ma23: ToolCallMessage dispatched
+fixture tool_event_09 es17+ma17: ToolCallMessage dispatched
+contract notes: es24 emits discriminator=assistant.call; ma17 accepts tool-call discriminator=tool_call; ma23 accepts assistant.call",ENV_DEPENDENCY,特定 event schema 与 message adapter 的 discriminator 契约不兼容，后续路由器才遇到错误类型。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=E-R-01; evidence_pattern=schema_adapter_discriminator_contract,test
+T057,"stream=s_227 provider archive: 71 message_start; 72 tool_call_delta; 73 tool_call_delta; 74 tool_call_delta; 75 tool_call_end; 76 message_end
+worker 10:03:17.441 seq=71 state=assistant_open
+worker 10:03:17.458 seq=72 tool_buffer_bytes=94
+worker 10:03:17.463 tool_ready=true; .464 action=dispatch_tool; .465 action=close_model_stream
+transport s_227 local_close=10:03:17.465
+provider seq=73@.472 seq=74@.479 seq=75@.486
+Traceback RemoteProtocolError: response ended before message_end
+application revision tool_ready_on=tool_call_end: seq=72/73/74 tool_ready=false, seq=75 tool_ready=true, stream=completed",CODE_RUNTIME,上游仍在正常产出时程序提前关闭流；应用状态机误将 partial tool event 当完整。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=R-N-02; evidence_pattern=local_close_state_machine,test
+T058,"request=req_504 Content-Encoding=gzip; client ContentDecodingError: gzip body ended before final block
+edge req_504: upstream_bytes=38612 upstream_archive_sha256=c144... downstream_bytes=24190 downstream_close=reset
+client captured artifact=req_504_partial.bin bytes=24190
+fixture diagnostic decoder=d14 partial=failed, decoder=d21 partial=failed
+edge archive req_504_full.gz bytes=38612 gzip_integrity=valid
+fixture diagnostic decoder=d14 complete=assistant_events_recovered, decoder=d21 complete=assistant_events_recovered",NETWORK_API,不同 decoder 对不完整与完整的相同上游 gzip 表示给出一致结果；差异在响应传输完整性。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=N-E-05; evidence_pattern=wire_integrity_vs_decoder,test
+T059,"req=agent_dns_91: NameResolutionError: no usable address returned
+pcap: query A api.provider.example; rcode=NOERROR answer=203.0.113.17
+same namespace shell: getent hosts api.provider.example -> 203.0.113.17
+native binding nb24: result_record={addr_family:AF_INET, addr_value:203.0.113.17, status:resolved}
+resolver_core rc18: conversion_source=family/address; resolver_object.addresses=[]
+worker-12 resolver_core=rc24 binding=nb24: addresses=[203.0.113.17]; provider HTTP=200
+original worker direct IP connection reached the provider edge",ENV_DEPENDENCY,DNS 网络响应有效，native binding 与 resolver-core 的结果记录契约不一致。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=E-N-04; evidence_pattern=dns_binding_conversion,test
+T060,"stream=s_184 protocol=agent-event-v2 (gateway supports event-ID resume)
+provider archive: 41 message_start; 42 content_delta; 43 content_end; 44 tool_delta; 45 tool_call_end; 46 message_end
+edge conn_1: forwarded=[41,42]; close_reason=upstream_interruption
+edge conn_2: resume_requested_after=42; replay_cursor=43; first_replayed_event=44; forwarded=[44,45,46]
+worker received=[41,42,44,45,46]
+Traceback StreamProtocolError: tool_delta received while content event remained open
+local parser replay [41,42,43,44,45,46]: message_complete
+edge archive event=43: present=true replay_forwarded=false",NETWORK_API,明确是带应用层事件续传的合成协议，远端网关恢复遗漏 content_end；正常完整序列由同一 parser 通过。,SYNTHETIC,Challenge Set V4 synthetic design; design_id=N-R-02; evidence_pattern=application_level_resume_cursor,test

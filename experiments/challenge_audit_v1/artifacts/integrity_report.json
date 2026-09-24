@@ -1,0 +1,51 @@
+{
+  "status": "PROGRAMMATIC_SCREENING_PASSED_NOT_ACCEPTANCE",
+  "source_dataset_sha256": "4e2efad0c333f320e9fc69b90b1c87458666d7c5a4c54d0a74a037d8d3a3e4ea",
+  "v3_dataset_sha256": "da66919aa555134ac69e6bce54ddaa9c82b72aeaa297bd0e15bab126060b6544",
+  "source_artifacts_reproduced": [
+    "candidates_full_v3.jsonl",
+    "model_input_only_v3.jsonl",
+    "change_log.json",
+    "baseline/audit.json",
+    "audit.json",
+    "audit.md",
+    "三问题_专项处理与验收报告.md",
+    "内部_六条盲审ID映射.csv"
+  ],
+  "blind_packet_entries_reproduced": true,
+  "samples": 60,
+  "unique_ids": 60,
+  "exact_duplicate_text_groups": 0,
+  "label_counts": {
+    "ENV_DEPENDENCY": 15,
+    "CODE_RUNTIME": 15,
+    "NETWORK_API": 15,
+    "CONTEXT_LIMIT": 15
+  },
+  "directed_boundary_counts": {
+    "ENV_DEPENDENCY->CODE_RUNTIME": 5,
+    "CODE_RUNTIME->CONTEXT_LIMIT": 5,
+    "NETWORK_API->CONTEXT_LIMIT": 5,
+    "CONTEXT_LIMIT->ENV_DEPENDENCY": 5,
+    "CODE_RUNTIME->ENV_DEPENDENCY": 5,
+    "ENV_DEPENDENCY->NETWORK_API": 5,
+    "CONTEXT_LIMIT->NETWORK_API": 5,
+    "CODE_RUNTIME->NETWORK_API": 5,
+    "CONTEXT_LIMIT->CODE_RUNTIME": 5,
+    "NETWORK_API->CODE_RUNTIME": 5,
+    "NETWORK_API->ENV_DEPENDENCY": 5,
+    "ENV_DEPENDENCY->CONTEXT_LIMIT": 5
+  },
+  "model_input_fields": [
+    "id",
+    "error_text"
+  ],
+  "t014_t049_similarity": 0.571,
+  "high_similarity_pairs_reported": 29,
+  "t049_mechanism": "remote_service_queue_scope_vs_model_per_request_window",
+  "independent_difficulty_review_pending": [
+    "T011",
+    "T042",
+    "T044"
+  ]
+}

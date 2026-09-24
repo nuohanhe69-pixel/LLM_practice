@@ -1,0 +1,3 @@
+# Versions used for this run; keep separate from the provider experiment environment.
+numpy==2.3.5
+scikit-learn==1.8.0

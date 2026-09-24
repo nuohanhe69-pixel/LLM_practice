@@ -1,0 +1,172 @@
+{
+  "source_sha256": "4e2efad0c333f320e9fc69b90b1c87458666d7c5a4c54d0a74a037d8d3a3e4ea",
+  "changes": [
+    {
+      "id": "T006",
+      "type": "template_naturalization",
+      "old": "limit_entry=md_22",
+      "new": "sequence_descriptor=md_22",
+      "description": "Field/title editing only; numbers, log facts, mechanism and label untouched."
+    },
+    {
+      "id": "T007",
+      "type": "single_line_shortcut_repair",
+      "description": "Split application guard input selection from installed package capability and post-change replay; keep app error first."
+    },
+    {
+      "id": "T007",
+      "type": "internal_flag_closed",
+      "previous": [
+        "check_single_line_shortcut"
+      ],
+      "new_status": "INTERNAL_SHORTCUT_REVIEW_REVISED_NOT_EXTERNALLY_VALIDATED"
+    },
+    {
+      "id": "T010",
+      "type": "paired_shortcut_repair",
+      "description": "Distribute source of invalid option into project wrapper trace and isolated library fixture, not a conclusion line."
+    },
+    {
+      "id": "T010",
+      "type": "internal_flag_closed",
+      "previous": [
+        "check_pair_single_line_shortcut"
+      ],
+      "new_status": "INTERNAL_SHORTCUT_REVIEW_REVISED_NOT_EXTERNALLY_VALIDATED"
+    },
+    {
+      "id": "T013",
+      "type": "template_naturalization",
+      "old": "history_summary=sum_104",
+      "new": "history_artifact=sum_104",
+      "description": "Field/title editing only; numbers, log facts, mechanism and label untouched."
+    },
+    {
+      "id": "T017",
+      "type": "template_naturalization",
+      "old": "limit_entry=md_22",
+      "new": "request_model_ref=md_22",
+      "description": "Field/title editing only; numbers, log facts, mechanism and label untouched."
+    },
+    {
+      "id": "T017",
+      "type": "template_naturalization",
+      "old": "history_summary=sum_28",
+      "new": "summary_artifact=sum_28",
+      "description": "Field/title editing only; numbers, log facts, mechanism and label untouched."
+    },
+    {
+      "id": "T018",
+      "type": "template_naturalization",
+      "old": "limit_entry=md_22",
+      "new": "reservation_model_ref=md_22",
+      "description": "Field/title editing only; numbers, log facts, mechanism and label untouched."
+    },
+    {
+      "id": "T023",
+      "type": "template_naturalization",
+      "old": "limit_entry=md_22",
+      "new": "input_descriptor=md_22",
+      "description": "Field/title editing only; numbers, log facts, mechanism and label untouched."
+    },
+    {
+      "id": "T023",
+      "type": "template_naturalization",
+      "old": "history_summary=sum_41",
+      "new": "summary_artifact=sum_41",
+      "description": "Field/title editing only; numbers, log facts, mechanism and label untouched."
+    },
+    {
+      "id": "T025",
+      "type": "template_naturalization",
+      "old": "limit_entry=md_22",
+      "new": "request_model_ref=md_22",
+      "description": "Field/title editing only; numbers, log facts, mechanism and label untouched."
+    },
+    {
+      "id": "T027",
+      "type": "template_naturalization",
+      "old": "component d14 startup:",
+      "new": "decoder d14 startup:",
+      "description": "Field/title editing only; numbers, log facts, mechanism and label untouched."
+    },
+    {
+      "id": "T028",
+      "type": "template_naturalization",
+      "old": "history_summary=sum_74",
+      "new": "compaction_artifact=sum_74",
+      "description": "Field/title editing only; numbers, log facts, mechanism and label untouched."
+    },
+    {
+      "id": "T029",
+      "type": "single_line_shortcut_repair",
+      "description": "Use opaque artifact IDs and separate installer manifest, platform probe, selector mapping, and loader verification."
+    },
+    {
+      "id": "T029",
+      "type": "internal_flag_closed",
+      "previous": [
+        "check_single_line_shortcut"
+      ],
+      "new_status": "INTERNAL_SHORTCUT_REVIEW_REVISED_NOT_EXTERNALLY_VALIDATED"
+    },
+    {
+      "id": "T041",
+      "type": "template_naturalization",
+      "old": "ContextLimitError request exceeds remaining session budget",
+      "new": "SessionBudgetRejected request exceeds remaining session budget",
+      "description": "Field/title editing only; numbers, log facts, mechanism and label untouched."
+    },
+    {
+      "id": "T043",
+      "type": "paired_shortcut_repair",
+      "description": "Describe normalizer/mapper encoding via independent manifests and retain contrasting integration fixtures; remove diagnostic conclusion."
+    },
+    {
+      "id": "T043",
+      "type": "internal_flag_closed",
+      "previous": [
+        "check_pair_single_line_shortcut"
+      ],
+      "new_status": "INTERNAL_SHORTCUT_REVIEW_REVISED_NOT_EXTERNALLY_VALIDATED"
+    },
+    {
+      "id": "T046",
+      "type": "template_naturalization",
+      "old": "state_rev=42 ContextLimitError",
+      "new": "state_rev=42 ConversationBudgetRejected",
+      "description": "Field/title editing only; numbers, log facts, mechanism and label untouched."
+    },
+    {
+      "id": "T048",
+      "type": "template_naturalization",
+      "old": "component contract record:",
+      "new": "tokenizer asset manifest:",
+      "description": "Field/title editing only; numbers, log facts, mechanism and label untouched."
+    },
+    {
+      "id": "T049",
+      "type": "mechanism_substitution",
+      "description": "Replace duplicate downstream stream stall with remote gateway tenant dispatch queue saturation correlated with long history; retains NETWORK->CONTEXT and client timeout; specifically distinguish per-request model window from external API scheduling availability."
+    },
+    {
+      "id": "T053",
+      "type": "template_naturalization",
+      "old": "merge component record:",
+      "new": "merge build manifest:",
+      "description": "Field/title editing only; numbers, log facts, mechanism and label untouched."
+    },
+    {
+      "id": "T055",
+      "type": "template_naturalization",
+      "old": "component contract:",
+      "new": "schema exchange manifest:",
+      "description": "Field/title editing only; numbers, log facts, mechanism and label untouched."
+    }
+  ],
+  "remaining_external_review_ids": [
+    "T011",
+    "T042",
+    "T044"
+  ]
+}

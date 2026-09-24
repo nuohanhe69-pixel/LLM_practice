@@ -1,0 +1,3042 @@
+{
+  "status": "SCREENING_COMPLETED_NOT_ACCEPTANCE",
+  "input_sha256": {
+    "dataset": "4e2efad0c333f320e9fc69b90b1c87458666d7c5a4c54d0a74a037d8d3a3e4ea",
+    "model_input": "7b23be8209d9121253b9a853328ad6e950d57b7c2e2d9f4b57d4e0b97b472394"
+  },
+  "n": 60,
+  "label_counts": {
+    "ENV_DEPENDENCY": 15,
+    "CODE_RUNTIME": 15,
+    "NETWORK_API": 15,
+    "CONTEXT_LIMIT": 15
+  },
+  "directed_pair_counts": {
+    "ENV_DEPENDENCY->CODE_RUNTIME": 5,
+    "CODE_RUNTIME->CONTEXT_LIMIT": 5,
+    "NETWORK_API->CONTEXT_LIMIT": 5,
+    "CONTEXT_LIMIT->ENV_DEPENDENCY": 5,
+    "CODE_RUNTIME->ENV_DEPENDENCY": 5,
+    "ENV_DEPENDENCY->NETWORK_API": 5,
+    "CONTEXT_LIMIT->NETWORK_API": 5,
+    "CODE_RUNTIME->NETWORK_API": 5,
+    "CONTEXT_LIMIT->CODE_RUNTIME": 5,
+    "NETWORK_API->CODE_RUNTIME": 5,
+    "NETWORK_API->ENV_DEPENDENCY": 5,
+    "ENV_DEPENDENCY->CONTEXT_LIMIT": 5
+  },
+  "structural_errors": [],
+  "warnings": [
+    "T007: unresolved flags ['check_single_line_shortcut']",
+    "T010: unresolved flags ['check_pair_single_line_shortcut']",
+    "T011: unresolved flags ['challenge_strength_independent_review_pending']",
+    "T029: unresolved flags ['check_single_line_shortcut']",
+    "T042: unresolved flags ['challenge_strength_independent_review_pending']",
+    "T043: unresolved flags ['check_pair_single_line_shortcut']",
+    "T044: unresolved flags ['challenge_strength_independent_review_pending']",
+    "Most surface_exception developer metadata are empty: auto-extract exceptions, do not trust field",
+    "Most surface_cues developer metadata are empty: no claim of completed cue metadata"
+  ],
+  "surface_baselines_repeated_stratified_5fold": {
+    "full_text_cleaned": {
+      "n_seeds": 10,
+      "all_scores": [
+        0.6167,
+        0.6,
+        0.5667,
+        0.5833,
+        0.6,
+        0.5833,
+        0.6,
+        0.6,
+        0.5833,
+        0.5667
+      ],
+      "median": 0.5917,
+      "min": 0.5667,
+      "max": 0.6167
+    },
+    "field_keys_only": {
+      "n_seeds": 10,
+      "all_scores": [
+        0.5333,
+        0.5333,
+        0.4833,
+        0.5333,
+        0.5333,
+        0.5667,
+        0.5167,
+        0.5833,
+        0.5,
+        0.4667
+      ],
+      "median": 0.5333,
+      "min": 0.4667,
+      "max": 0.5833
+    },
+    "exceptions_only": {
+      "n_seeds": 10,
+      "all_scores": [
+        0.2667,
+        0.2333,
+        0.25,
+        0.2833,
+        0.25,
+        0.2167,
+        0.2167,
+        0.2667,
+        0.25,
+        0.1833
+      ],
+      "median": 0.25,
+      "min": 0.1833,
+      "max": 0.2833
+    },
+    "first_two_lines": {
+      "n_seeds": 10,
+      "all_scores": [
+        0.3667,
+        0.3833,
+        0.3333,
+        0.2833,
+        0.3833,
+        0.3167,
+        0.3167,
+        0.3333,
+        0.4,
+        0.2833
+      ],
+      "median": 0.3333,
+      "min": 0.2833,
+      "max": 0.4
+    },
+    "shape_only": {
+      "n_seeds": 10,
+      "all_scores": [
+        0.4,
+        0.3333,
+        0.3667,
+        0.4167,
+        0.4167,
+        0.3167,
+        0.2333,
+        0.3833,
+        0.4333,
+        0.3833
+      ],
+      "median": 0.3833,
+      "min": 0.2333,
+      "max": 0.4333
+    }
+  },
+  "leave_one_bidirectional_boundary_out_domain_shift_only": [
+    {
+      "boundary": "CODE_RUNTIME<->CONTEXT_LIMIT",
+      "n_test": 10,
+      "test_label_set": [
+        "CODE_RUNTIME",
+        "CONTEXT_LIMIT"
+      ],
+      "accuracy": 0.0,
+      "predicted_labels": {
+        "ENV_DEPENDENCY": 1,
+        "NETWORK_API": 9
+      }
+    },
+    {
+      "boundary": "CODE_RUNTIME<->ENV_DEPENDENCY",
+      "n_test": 10,
+      "test_label_set": [
+        "CODE_RUNTIME",
+        "ENV_DEPENDENCY"
+      ],
+      "accuracy": 0.0,
+      "predicted_labels": {
+        "CONTEXT_LIMIT": 4,
+        "NETWORK_API": 6
+      }
+    },
+    {
+      "boundary": "CODE_RUNTIME<->NETWORK_API",
+      "n_test": 10,
+      "test_label_set": [
+        "CODE_RUNTIME",
+        "NETWORK_API"
+      ],
+      "accuracy": 0.0,
+      "predicted_labels": {
+        "CONTEXT_LIMIT": 9,
+        "ENV_DEPENDENCY": 1
+      }
+    },
+    {
+      "boundary": "CONTEXT_LIMIT<->ENV_DEPENDENCY",
+      "n_test": 10,
+      "test_label_set": [
+        "CONTEXT_LIMIT",
+        "ENV_DEPENDENCY"
+      ],
+      "accuracy": 0.0,
+      "predicted_labels": {
+        "CODE_RUNTIME": 3,
+        "NETWORK_API": 7
+      }
+    },
+    {
+      "boundary": "CONTEXT_LIMIT<->NETWORK_API",
+      "n_test": 10,
+      "test_label_set": [
+        "CONTEXT_LIMIT",
+        "NETWORK_API"
+      ],
+      "accuracy": 0.1,
+      "predicted_labels": {
+        "CODE_RUNTIME": 6,
+        "ENV_DEPENDENCY": 3,
+        "NETWORK_API": 1
+      }
+    },
+    {
+      "boundary": "ENV_DEPENDENCY<->NETWORK_API",
+      "n_test": 10,
+      "test_label_set": [
+        "ENV_DEPENDENCY",
+        "NETWORK_API"
+      ],
+      "accuracy": 0.0,
+      "predicted_labels": {
+        "CONTEXT_LIMIT": 7,
+        "CODE_RUNTIME": 3
+      }
+    }
+  ],
+  "exclusive_repeated_terms": [
+    {
+      "term": "capacity",
+      "n_samples": 7,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 7,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 7
+    },
+    {
+      "term": "component",
+      "n_samples": 5,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 5,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 5
+    },
+    {
+      "term": "limit_entry",
+      "n_samples": 5,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 5,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 5
+    },
+    {
+      "term": "contextlimiterror",
+      "n_samples": 4,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 4
+      },
+      "dominant_share": 1.0,
+      "range": 4
+    },
+    {
+      "term": "history_summary",
+      "n_samples": 4,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 4,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 4
+    },
+    {
+      "term": "provider request",
+      "n_samples": 4,
+      "by_class": {
+        "NETWORK_API": 4,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 4
+    },
+    {
+      "term": "total_sequence_capacity",
+      "n_samples": 4,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 4,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 4
+    },
+    {
+      "term": "worker none",
+      "n_samples": 4,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 4,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 4
+    },
+    {
+      "term": "assembled_units",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 3,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "close_reason",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 3,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "compact",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 3,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "complete integration",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 3,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "component contract",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 3,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "contextlimiterror request",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 3
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "dispatch",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 3,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "expects",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 3,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "failed_before_inference",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 3,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "generation_reservation",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 3,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "installation",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 3
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "installed",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 3
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "none provider",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 3,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "provider diagnostic",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 3,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "provider_request_id",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 3
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "provider_request_id none",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 3
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "replay ingress",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 3,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "request_parsed",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 3,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "response_schema",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 3,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "sequence_admission",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 3,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "sequence_admission completed",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 3,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "unrelated",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 3,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    }
+  ],
+  "all_high_association_terms": [
+    {
+      "term": "capacity",
+      "n_samples": 7,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 7,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 7
+    },
+    {
+      "term": "component",
+      "n_samples": 5,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 5,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 5
+    },
+    {
+      "term": "limit_entry",
+      "n_samples": 5,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 5,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 5
+    },
+    {
+      "term": "contextlimiterror",
+      "n_samples": 4,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 4
+      },
+      "dominant_share": 1.0,
+      "range": 4
+    },
+    {
+      "term": "history_summary",
+      "n_samples": 4,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 4,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 4
+    },
+    {
+      "term": "provider request",
+      "n_samples": 4,
+      "by_class": {
+        "NETWORK_API": 4,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 4
+    },
+    {
+      "term": "total_sequence_capacity",
+      "n_samples": 4,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 4,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 4
+    },
+    {
+      "term": "worker none",
+      "n_samples": 4,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 4,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 4
+    },
+    {
+      "term": "assembled_units",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 3,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "close_reason",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 3,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "compact",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 3,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "complete integration",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 3,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "component contract",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 3,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "contextlimiterror request",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 3
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "dispatch",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 3,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "expects",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 3,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "failed_before_inference",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 3,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "generation_reservation",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 3,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "installation",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 3
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "installed",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 3
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "none provider",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 3,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "provider diagnostic",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 3,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "provider_request_id",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 3
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "provider_request_id none",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 3
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "replay ingress",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 3,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "request_parsed",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 3,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "response_schema",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 3,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "sequence_admission",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 3,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "sequence_admission completed",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 3,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "unrelated",
+      "n_samples": 3,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 3,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 1.0,
+      "range": 3
+    },
+    {
+      "term": "contract",
+      "n_samples": 8,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 7,
+        "CODE_RUNTIME": 1
+      },
+      "dominant_share": 0.875,
+      "range": 7
+    },
+    {
+      "term": "ingress",
+      "n_samples": 7,
+      "by_class": {
+        "NETWORK_API": 6,
+        "CONTEXT_LIMIT": 1,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 0.857,
+      "range": 6
+    },
+    {
+      "term": "model registry",
+      "n_samples": 6,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 5,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 1
+      },
+      "dominant_share": 0.833,
+      "range": 5
+    },
+    {
+      "term": "fixture",
+      "n_samples": 10,
+      "by_class": {
+        "NETWORK_API": 2,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 8,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 0.8,
+      "range": 8
+    },
+    {
+      "term": "budget",
+      "n_samples": 4,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 1,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 3
+      },
+      "dominant_share": 0.75,
+      "range": 3
+    },
+    {
+      "term": "complete provider",
+      "n_samples": 4,
+      "by_class": {
+        "NETWORK_API": 1,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 3,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 0.75,
+      "range": 3
+    },
+    {
+      "term": "content",
+      "n_samples": 4,
+      "by_class": {
+        "NETWORK_API": 3,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 1,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 0.75,
+      "range": 3
+    },
+    {
+      "term": "ended",
+      "n_samples": 4,
+      "by_class": {
+        "NETWORK_API": 3,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 1
+      },
+      "dominant_share": 0.75,
+      "range": 3
+    },
+    {
+      "term": "integration",
+      "n_samples": 4,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 3,
+        "CODE_RUNTIME": 1
+      },
+      "dominant_share": 0.75,
+      "range": 3
+    },
+    {
+      "term": "local_admission completed",
+      "n_samples": 4,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 3,
+        "CODE_RUNTIME": 1
+      },
+      "dominant_share": 0.75,
+      "range": 3
+    },
+    {
+      "term": "output",
+      "n_samples": 4,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 1,
+        "CODE_RUNTIME": 3
+      },
+      "dominant_share": 0.75,
+      "range": 3
+    },
+    {
+      "term": "parser",
+      "n_samples": 4,
+      "by_class": {
+        "NETWORK_API": 3,
+        "CONTEXT_LIMIT": 1,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 0.75,
+      "range": 3
+    },
+    {
+      "term": "provider_response complete",
+      "n_samples": 4,
+      "by_class": {
+        "NETWORK_API": 1,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 3,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 0.75,
+      "range": 3
+    },
+    {
+      "term": "request_accepted",
+      "n_samples": 4,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 1,
+        "ENV_DEPENDENCY": 3,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 0.75,
+      "range": 3
+    },
+    {
+      "term": "request_accepted true",
+      "n_samples": 4,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 1,
+        "ENV_DEPENDENCY": 3,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 0.75,
+      "range": 3
+    },
+    {
+      "term": "resolved",
+      "n_samples": 4,
+      "by_class": {
+        "NETWORK_API": 1,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 3,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 0.75,
+      "range": 3
+    },
+    {
+      "term": "the",
+      "n_samples": 4,
+      "by_class": {
+        "NETWORK_API": 3,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 1,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 0.75,
+      "range": 3
+    },
+    {
+      "term": "upstream_bytes",
+      "n_samples": 4,
+      "by_class": {
+        "NETWORK_API": 3,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 1,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 0.75,
+      "range": 3
+    },
+    {
+      "term": "registry",
+      "n_samples": 15,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 11,
+        "ENV_DEPENDENCY": 2,
+        "CODE_RUNTIME": 2
+      },
+      "dominant_share": 0.733,
+      "range": 11
+    },
+    {
+      "term": "provider_response",
+      "n_samples": 9,
+      "by_class": {
+        "NETWORK_API": 1,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 6,
+        "CODE_RUNTIME": 2
+      },
+      "dominant_share": 0.667,
+      "range": 6
+    },
+    {
+      "term": "local_admission",
+      "n_samples": 6,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 4,
+        "CODE_RUNTIME": 2
+      },
+      "dominant_share": 0.667,
+      "range": 4
+    },
+    {
+      "term": "replay",
+      "n_samples": 6,
+      "by_class": {
+        "NETWORK_API": 4,
+        "CONTEXT_LIMIT": 1,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 1
+      },
+      "dominant_share": 0.667,
+      "range": 4
+    },
+    {
+      "term": "tokenizer",
+      "n_samples": 6,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 4,
+        "ENV_DEPENDENCY": 2,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 0.667,
+      "range": 4
+    },
+    {
+      "term": "edge",
+      "n_samples": 19,
+      "by_class": {
+        "NETWORK_API": 12,
+        "CONTEXT_LIMIT": 2,
+        "ENV_DEPENDENCY": 4,
+        "CODE_RUNTIME": 1
+      },
+      "dominant_share": 0.632,
+      "range": 11
+    },
+    {
+      "term": "none",
+      "n_samples": 16,
+      "by_class": {
+        "NETWORK_API": 2,
+        "CONTEXT_LIMIT": 10,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 4
+      },
+      "dominant_share": 0.625,
+      "range": 10
+    },
+    {
+      "term": "provider req",
+      "n_samples": 8,
+      "by_class": {
+        "NETWORK_API": 2,
+        "CONTEXT_LIMIT": 5,
+        "ENV_DEPENDENCY": 1,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 0.625,
+      "range": 5
+    },
+    {
+      "term": "app",
+      "n_samples": 8,
+      "by_class": {
+        "NETWORK_API": 1,
+        "CONTEXT_LIMIT": 1,
+        "ENV_DEPENDENCY": 1,
+        "CODE_RUNTIME": 5
+      },
+      "dominant_share": 0.625,
+      "range": 4
+    },
+    {
+      "term": "application",
+      "n_samples": 5,
+      "by_class": {
+        "NETWORK_API": 1,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 1,
+        "CODE_RUNTIME": 3
+      },
+      "dominant_share": 0.6,
+      "range": 3
+    },
+    {
+      "term": "conversation",
+      "n_samples": 5,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 1,
+        "ENV_DEPENDENCY": 3,
+        "CODE_RUNTIME": 1
+      },
+      "dominant_share": 0.6,
+      "range": 3
+    },
+    {
+      "term": "downstream_bytes",
+      "n_samples": 5,
+      "by_class": {
+        "NETWORK_API": 3,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 2,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 0.6,
+      "range": 3
+    },
+    {
+      "term": "final",
+      "n_samples": 5,
+      "by_class": {
+        "NETWORK_API": 3,
+        "CONTEXT_LIMIT": 1,
+        "ENV_DEPENDENCY": 1,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 0.6,
+      "range": 3
+    },
+    {
+      "term": "history",
+      "n_samples": 5,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 3,
+        "ENV_DEPENDENCY": 1,
+        "CODE_RUNTIME": 1
+      },
+      "dominant_share": 0.6,
+      "range": 3
+    },
+    {
+      "term": "tools",
+      "n_samples": 5,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 3,
+        "ENV_DEPENDENCY": 1,
+        "CODE_RUNTIME": 1
+      },
+      "dominant_share": 0.6,
+      "range": 3
+    },
+    {
+      "term": "accepted",
+      "n_samples": 14,
+      "by_class": {
+        "NETWORK_API": 2,
+        "CONTEXT_LIMIT": 8,
+        "ENV_DEPENDENCY": 4,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 0.571,
+      "range": 8
+    },
+    {
+      "term": "assistant_response",
+      "n_samples": 7,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 4,
+        "ENV_DEPENDENCY": 1,
+        "CODE_RUNTIME": 2
+      },
+      "dominant_share": 0.571,
+      "range": 4
+    },
+    {
+      "term": "tool",
+      "n_samples": 7,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 3,
+        "ENV_DEPENDENCY": 4,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 0.571,
+      "range": 4
+    },
+    {
+      "term": "job",
+      "n_samples": 9,
+      "by_class": {
+        "NETWORK_API": 1,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 5,
+        "CODE_RUNTIME": 3
+      },
+      "dominant_share": 0.556,
+      "range": 5
+    },
+    {
+      "term": "unchanged",
+      "n_samples": 10,
+      "by_class": {
+        "NETWORK_API": 3,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 2,
+        "CODE_RUNTIME": 5
+      },
+      "dominant_share": 0.5,
+      "range": 5
+    },
+    {
+      "term": "diagnostic",
+      "n_samples": 8,
+      "by_class": {
+        "NETWORK_API": 2,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 4,
+        "CODE_RUNTIME": 2
+      },
+      "dominant_share": 0.5,
+      "range": 4
+    },
+    {
+      "term": "event",
+      "n_samples": 8,
+      "by_class": {
+        "NETWORK_API": 3,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 4,
+        "CODE_RUNTIME": 1
+      },
+      "dominant_share": 0.5,
+      "range": 4
+    },
+    {
+      "term": "incident",
+      "n_samples": 8,
+      "by_class": {
+        "NETWORK_API": 4,
+        "CONTEXT_LIMIT": 4,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 0.5,
+      "range": 4
+    },
+    {
+      "term": "record",
+      "n_samples": 6,
+      "by_class": {
+        "NETWORK_API": 1,
+        "CONTEXT_LIMIT": 3,
+        "ENV_DEPENDENCY": 2,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 0.5,
+      "range": 3
+    },
+    {
+      "term": "run",
+      "n_samples": 6,
+      "by_class": {
+        "NETWORK_API": 1,
+        "CONTEXT_LIMIT": 2,
+        "ENV_DEPENDENCY": 3,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 0.5,
+      "range": 3
+    },
+    {
+      "term": "state",
+      "n_samples": 6,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 1,
+        "ENV_DEPENDENCY": 2,
+        "CODE_RUNTIME": 3
+      },
+      "dominant_share": 0.5,
+      "range": 3
+    },
+    {
+      "term": "closed",
+      "n_samples": 11,
+      "by_class": {
+        "NETWORK_API": 3,
+        "CONTEXT_LIMIT": 5,
+        "ENV_DEPENDENCY": 2,
+        "CODE_RUNTIME": 1
+      },
+      "dominant_share": 0.455,
+      "range": 4
+    },
+    {
+      "term": "request",
+      "n_samples": 20,
+      "by_class": {
+        "NETWORK_API": 9,
+        "CONTEXT_LIMIT": 2,
+        "ENV_DEPENDENCY": 2,
+        "CODE_RUNTIME": 7
+      },
+      "dominant_share": 0.45,
+      "range": 7
+    },
+    {
+      "term": "trace",
+      "n_samples": 9,
+      "by_class": {
+        "NETWORK_API": 2,
+        "CONTEXT_LIMIT": 4,
+        "ENV_DEPENDENCY": 1,
+        "CODE_RUNTIME": 2
+      },
+      "dominant_share": 0.444,
+      "range": 3
+    },
+    {
+      "term": "and",
+      "n_samples": 7,
+      "by_class": {
+        "NETWORK_API": 3,
+        "CONTEXT_LIMIT": 0,
+        "ENV_DEPENDENCY": 2,
+        "CODE_RUNTIME": 2
+      },
+      "dominant_share": 0.429,
+      "range": 3
+    },
+    {
+      "term": "completion",
+      "n_samples": 7,
+      "by_class": {
+        "NETWORK_API": 3,
+        "CONTEXT_LIMIT": 3,
+        "ENV_DEPENDENCY": 0,
+        "CODE_RUNTIME": 1
+      },
+      "dominant_share": 0.429,
+      "range": 3
+    },
+    {
+      "term": "connection",
+      "n_samples": 7,
+      "by_class": {
+        "NETWORK_API": 3,
+        "CONTEXT_LIMIT": 3,
+        "ENV_DEPENDENCY": 1,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 0.429,
+      "range": 3
+    },
+    {
+      "term": "descriptor",
+      "n_samples": 7,
+      "by_class": {
+        "NETWORK_API": 2,
+        "CONTEXT_LIMIT": 2,
+        "ENV_DEPENDENCY": 3,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 0.429,
+      "range": 3
+    },
+    {
+      "term": "inference",
+      "n_samples": 7,
+      "by_class": {
+        "NETWORK_API": 3,
+        "CONTEXT_LIMIT": 3,
+        "ENV_DEPENDENCY": 1,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 0.429,
+      "range": 3
+    },
+    {
+      "term": "http",
+      "n_samples": 12,
+      "by_class": {
+        "NETWORK_API": 5,
+        "CONTEXT_LIMIT": 3,
+        "ENV_DEPENDENCY": 3,
+        "CODE_RUNTIME": 1
+      },
+      "dominant_share": 0.417,
+      "range": 4
+    },
+    {
+      "term": "client",
+      "n_samples": 20,
+      "by_class": {
+        "NETWORK_API": 5,
+        "CONTEXT_LIMIT": 8,
+        "ENV_DEPENDENCY": 2,
+        "CODE_RUNTIME": 5
+      },
+      "dominant_share": 0.4,
+      "range": 6
+    },
+    {
+      "term": "returned",
+      "n_samples": 10,
+      "by_class": {
+        "NETWORK_API": 0,
+        "CONTEXT_LIMIT": 3,
+        "ENV_DEPENDENCY": 3,
+        "CODE_RUNTIME": 4
+      },
+      "dominant_share": 0.4,
+      "range": 4
+    },
+    {
+      "term": "model",
+      "n_samples": 18,
+      "by_class": {
+        "NETWORK_API": 2,
+        "CONTEXT_LIMIT": 7,
+        "ENV_DEPENDENCY": 3,
+        "CODE_RUNTIME": 6
+      },
+      "dominant_share": 0.389,
+      "range": 5
+    },
+    {
+      "term": "response",
+      "n_samples": 13,
+      "by_class": {
+        "NETWORK_API": 5,
+        "CONTEXT_LIMIT": 3,
+        "ENV_DEPENDENCY": 1,
+        "CODE_RUNTIME": 4
+      },
+      "dominant_share": 0.385,
+      "range": 4
+    },
+    {
+      "term": "worker",
+      "n_samples": 24,
+      "by_class": {
+        "NETWORK_API": 9,
+        "CONTEXT_LIMIT": 6,
+        "ENV_DEPENDENCY": 7,
+        "CODE_RUNTIME": 2
+      },
+      "dominant_share": 0.375,
+      "range": 7
+    },
+    {
+      "term": "complete",
+      "n_samples": 26,
+      "by_class": {
+        "NETWORK_API": 9,
+        "CONTEXT_LIMIT": 4,
+        "ENV_DEPENDENCY": 9,
+        "CODE_RUNTIME": 4
+      },
+      "dominant_share": 0.346,
+      "range": 5
+    },
+    {
+      "term": "req",
+      "n_samples": 21,
+      "by_class": {
+        "NETWORK_API": 7,
+        "CONTEXT_LIMIT": 7,
+        "ENV_DEPENDENCY": 4,
+        "CODE_RUNTIME": 3
+      },
+      "dominant_share": 0.333,
+      "range": 4
+    },
+    {
+      "term": "agent",
+      "n_samples": 12,
+      "by_class": {
+        "NETWORK_API": 4,
+        "CONTEXT_LIMIT": 4,
+        "ENV_DEPENDENCY": 4,
+        "CODE_RUNTIME": 0
+      },
+      "dominant_share": 0.333,
+      "range": 4
+    },
+    {
+      "term": "completed",
+      "n_samples": 23,
+      "by_class": {
+        "NETWORK_API": 4,
+        "CONTEXT_LIMIT": 6,
+        "ENV_DEPENDENCY": 6,
+        "CODE_RUNTIME": 7
+      },
+      "dominant_share": 0.304,
+      "range": 3
+    },
+    {
+      "term": "provider",
+      "n_samples": 44,
+      "by_class": {
+        "NETWORK_API": 11,
+        "CONTEXT_LIMIT": 13,
+        "ENV_DEPENDENCY": 12,
+        "CODE_RUNTIME": 8
+      },
+      "dominant_share": 0.295,
+      "range": 5
+    }
+  ],
+  "top_near_neighbors": [
+    {
+      "id_a": "T014",
+      "design_a": "N-R-05",
+      "label_a": "NETWORK_API",
+      "id_b": "T049",
+      "design_b": "N-C-02",
+      "label_b": "NETWORK_API",
+      "cosine": 0.818,
+      "opposite_gt": false
+    },
+    {
+      "id_a": "T012",
+      "design_a": "R-N-05",
+      "label_a": "CODE_RUNTIME",
+      "id_b": "T014",
+      "design_b": "N-R-05",
+      "label_b": "NETWORK_API",
+      "cosine": 0.592,
+      "opposite_gt": true
+    },
+    {
+      "id_a": "T012",
+      "design_a": "R-N-05",
+      "label_a": "CODE_RUNTIME",
+      "id_b": "T049",
+      "design_b": "N-C-02",
+      "label_b": "NETWORK_API",
+      "cosine": 0.581,
+      "opposite_gt": true
+    },
+    {
+      "id_a": "T014",
+      "design_a": "N-R-05",
+      "label_a": "NETWORK_API",
+      "id_b": "T060",
+      "design_b": "N-R-02",
+      "label_b": "NETWORK_API",
+      "cosine": 0.555,
+      "opposite_gt": false
+    },
+    {
+      "id_a": "T049",
+      "design_a": "N-C-02",
+      "label_a": "NETWORK_API",
+      "id_b": "T060",
+      "design_b": "N-R-02",
+      "label_b": "NETWORK_API",
+      "cosine": 0.539,
+      "opposite_gt": false
+    },
+    {
+      "id_a": "T014",
+      "design_a": "N-R-05",
+      "label_a": "NETWORK_API",
+      "id_b": "T046",
+      "design_b": "R-C-04",
+      "label_b": "CODE_RUNTIME",
+      "cosine": 0.525,
+      "opposite_gt": true
+    },
+    {
+      "id_a": "T046",
+      "design_a": "R-C-04",
+      "label_a": "CODE_RUNTIME",
+      "id_b": "T049",
+      "design_b": "N-C-02",
+      "label_b": "NETWORK_API",
+      "cosine": 0.518,
+      "opposite_gt": true
+    },
+    {
+      "id_a": "T014",
+      "design_a": "N-R-05",
+      "label_a": "NETWORK_API",
+      "id_b": "T019",
+      "design_b": "R-N-01",
+      "label_b": "CODE_RUNTIME",
+      "cosine": 0.517,
+      "opposite_gt": true
+    },
+    {
+      "id_a": "T019",
+      "design_a": "R-N-01",
+      "label_a": "CODE_RUNTIME",
+      "id_b": "T049",
+      "design_b": "N-C-02",
+      "label_b": "NETWORK_API",
+      "cosine": 0.496,
+      "opposite_gt": true
+    },
+    {
+      "id_a": "T003",
+      "design_a": "N-C-04",
+      "label_a": "NETWORK_API",
+      "id_b": "T049",
+      "design_b": "N-C-02",
+      "label_b": "NETWORK_API",
+      "cosine": 0.495,
+      "opposite_gt": false
+    },
+    {
+      "id_a": "T014",
+      "design_a": "N-R-05",
+      "label_a": "NETWORK_API",
+      "id_b": "T020",
+      "design_b": "N-R-01",
+      "label_b": "NETWORK_API",
+      "cosine": 0.488,
+      "opposite_gt": false
+    },
+    {
+      "id_a": "T003",
+      "design_a": "N-C-04",
+      "label_a": "NETWORK_API",
+      "id_b": "T014",
+      "design_b": "N-R-05",
+      "label_b": "NETWORK_API",
+      "cosine": 0.469,
+      "opposite_gt": false
+    },
+    {
+      "id_a": "T014",
+      "design_a": "N-R-05",
+      "label_a": "NETWORK_API",
+      "id_b": "T023",
+      "design_b": "C-C-01",
+      "label_b": "CONTEXT_LIMIT",
+      "cosine": 0.46,
+      "opposite_gt": true
+    },
+    {
+      "id_a": "T020",
+      "design_a": "N-R-01",
+      "label_a": "NETWORK_API",
+      "id_b": "T049",
+      "design_b": "N-C-02",
+      "label_b": "NETWORK_API",
+      "cosine": 0.46,
+      "opposite_gt": false
+    },
+    {
+      "id_a": "T049",
+      "design_a": "N-C-02",
+      "label_a": "NETWORK_API",
+      "id_b": "T057",
+      "design_b": "R-N-02",
+      "label_b": "CODE_RUNTIME",
+      "cosine": 0.458,
+      "opposite_gt": true
+    },
+    {
+      "id_a": "T023",
+      "design_a": "C-C-01",
+      "label_a": "CONTEXT_LIMIT",
+      "id_b": "T049",
+      "design_b": "N-C-02",
+      "label_b": "NETWORK_API",
+      "cosine": 0.453,
+      "opposite_gt": true
+    },
+    {
+      "id_a": "T014",
+      "design_a": "N-R-05",
+      "label_a": "NETWORK_API",
+      "id_b": "T057",
+      "design_b": "R-N-02",
+      "label_b": "CODE_RUNTIME",
+      "cosine": 0.452,
+      "opposite_gt": true
+    },
+    {
+      "id_a": "T012",
+      "design_a": "R-N-05",
+      "label_a": "CODE_RUNTIME",
+      "id_b": "T060",
+      "design_b": "N-R-02",
+      "label_b": "NETWORK_API",
+      "cosine": 0.402,
+      "opposite_gt": true
+    },
+    {
+      "id_a": "T023",
+      "design_a": "C-C-01",
+      "label_a": "CONTEXT_LIMIT",
+      "id_b": "T046",
+      "design_b": "R-C-04",
+      "label_b": "CODE_RUNTIME",
+      "cosine": 0.4,
+      "opposite_gt": true
+    },
+    {
+      "id_a": "T057",
+      "design_a": "R-N-02",
+      "label_a": "CODE_RUNTIME",
+      "id_b": "T060",
+      "design_b": "N-R-02",
+      "label_b": "NETWORK_API",
+      "cosine": 0.394,
+      "opposite_gt": true
+    },
+    {
+      "id_a": "T012",
+      "design_a": "R-N-05",
+      "label_a": "CODE_RUNTIME",
+      "id_b": "T057",
+      "design_b": "R-N-02",
+      "label_b": "CODE_RUNTIME",
+      "cosine": 0.386,
+      "opposite_gt": false
+    },
+    {
+      "id_a": "T014",
+      "design_a": "N-R-05",
+      "label_a": "NETWORK_API",
+      "id_b": "T040",
+      "design_b": "R-N-04",
+      "label_b": "CODE_RUNTIME",
+      "cosine": 0.385,
+      "opposite_gt": true
+    },
+    {
+      "id_a": "T012",
+      "design_a": "R-N-05",
+      "label_a": "CODE_RUNTIME",
+      "id_b": "T046",
+      "design_b": "R-C-04",
+      "label_b": "CODE_RUNTIME",
+      "cosine": 0.382,
+      "opposite_gt": false
+    },
+    {
+      "id_a": "T021",
+      "design_a": "C-E-01",
+      "label_a": "CONTEXT_LIMIT",
+      "id_b": "T049",
+      "design_b": "N-C-02",
+      "label_b": "NETWORK_API",
+      "cosine": 0.38,
+      "opposite_gt": true
+    },
+    {
+      "id_a": "T014",
+      "design_a": "N-R-05",
+      "label_a": "NETWORK_API",
+      "id_b": "T021",
+      "design_b": "C-E-01",
+      "label_b": "CONTEXT_LIMIT",
+      "cosine": 0.375,
+      "opposite_gt": true
+    },
+    {
+      "id_a": "T046",
+      "design_a": "R-C-04",
+      "label_a": "CODE_RUNTIME",
+      "id_b": "T060",
+      "design_b": "N-R-02",
+      "label_b": "NETWORK_API",
+      "cosine": 0.375,
+      "opposite_gt": true
+    },
+    {
+      "id_a": "T014",
+      "design_a": "N-R-05",
+      "label_a": "NETWORK_API",
+      "id_b": "T054",
+      "design_b": "N-R-04",
+      "label_b": "NETWORK_API",
+      "cosine": 0.37,
+      "opposite_gt": false
+    },
+    {
+      "id_a": "T019",
+      "design_a": "R-N-01",
+      "label_a": "CODE_RUNTIME",
+      "id_b": "T060",
+      "design_b": "N-R-02",
+      "label_b": "NETWORK_API",
+      "cosine": 0.368,
+      "opposite_gt": true
+    },
+    {
+      "id_a": "T020",
+      "design_a": "N-R-01",
+      "label_a": "NETWORK_API",
+      "id_b": "T060",
+      "design_b": "N-R-02",
+      "label_b": "NETWORK_API",
+      "cosine": 0.365,
+      "opposite_gt": false
+    },
+    {
+      "id_a": "T012",
+      "design_a": "R-N-05",
+      "label_a": "CODE_RUNTIME",
+      "id_b": "T019",
+      "design_b": "R-N-01",
+      "label_b": "CODE_RUNTIME",
+      "cosine": 0.364,
+      "opposite_gt": false
+    },
+    {
+      "id_a": "T040",
+      "design_a": "R-N-04",
+      "label_a": "CODE_RUNTIME",
+      "id_b": "T049",
+      "design_b": "N-C-02",
+      "label_b": "NETWORK_API",
+      "cosine": 0.364,
+      "opposite_gt": true
+    },
+    {
+      "id_a": "T003",
+      "design_a": "N-C-04",
+      "label_a": "NETWORK_API",
+      "id_b": "T060",
+      "design_b": "N-R-02",
+      "label_b": "NETWORK_API",
+      "cosine": 0.356,
+      "opposite_gt": false
+    },
+    {
+      "id_a": "T049",
+      "design_a": "N-C-02",
+      "label_a": "NETWORK_API",
+      "id_b": "T054",
+      "design_b": "N-R-04",
+      "label_b": "NETWORK_API",
+      "cosine": 0.353,
+      "opposite_gt": false
+    }
+  ],
+  "format_by_gt": {
+    "NETWORK_API": {
+      "PROVIDER_RECORD": 1,
+      "TIMELINE": 2,
+      "TRACE_BUNDLE": 2,
+      "STACKTRACE_PLUS_LOG": 2,
+      "RETRY_LOG": 2,
+      "CI_LOG": 1,
+      "MATRIX_LOG": 1,
+      "INCIDENT_NOTE": 1,
+      "PACKET_TRACE": 1,
+      "FIXTURE_DIAGNOSTIC": 1,
+      "EVENT_STREAM": 1
+    },
+    "CONTEXT_LIMIT": {
+      "PROVIDER_RECORD": 2,
+      "CI_LOG": 3,
+      "IMAGE_DIAGNOSTIC": 1,
+      "STACKTRACE_PLUS_LOG": 3,
+      "TOOL_TRACE": 1,
+      "TRACE_BUNDLE": 2,
+      "STATE_DUMP": 1,
+      "TIMELINE": 1,
+      "INCIDENT_NOTE": 1
+    },
+    "ENV_DEPENDENCY": {
+      "DISCOVERY_LOG": 1,
+      "TRACE_BUNDLE": 5,
+      "MATRIX_LOG": 3,
+      "STACKTRACE_PLUS_LOG": 2,
+      "ACCOUNTING_TRACE": 1,
+      "FIXTURE_DIAGNOSTIC": 1,
+      "TRANSPORT_TRACE": 1,
+      "SCHEMA_TRACE": 1
+    },
+    "CODE_RUNTIME": {
+      "ACCOUNTING_TRACE": 1,
+      "STATE_DUMP": 4,
+      "CI_LOG": 1,
+      "TRACE_BUNDLE": 1,
+      "TIMELINE": 4,
+      "STACKTRACE_PLUS_LOG": 3,
+      "DISCOVERY_LOG": 1
+    }
+  },
+  "length_chars": {
+    "NETWORK_API": {
+      "min": 354,
+      "median": 578,
+      "max": 716
+    },
+    "CONTEXT_LIMIT": {
+      "min": 568,
+      "median": 685,
+      "max": 1004
+    },
+    "ENV_DEPENDENCY": {
+      "min": 499,
+      "median": 658,
+      "max": 953
+    },
+    "CODE_RUNTIME": {
+      "min": 487,
+      "median": 609,
+      "max": 751
+    }
+  },
+  "exceptions_by_gt": {
+    "AttributeError": {
+      "ENV_DEPENDENCY": 1
+    },
+    "BrokenPipeError": {
+      "CONTEXT_LIMIT": 1
+    },
+    "ConnectionError": {
+      "ENV_DEPENDENCY": 1,
+      "NETWORK_API": 1
+    },
+    "ConnectionResetError": {
+      "CONTEXT_LIMIT": 1
+    },
+    "ContentDecodingError": {
+      "ENV_DEPENDENCY": 1,
+      "NETWORK_API": 1
+    },
+    "ContextLimitError": {
+      "CODE_RUNTIME": 4
+    },
+    "GatewayTimeout": {
+      "NETWORK_API": 1
+    },
+    "ImportError": {
+      "CODE_RUNTIME": 1
+    },
+    "JSONDecodeError": {
+      "NETWORK_API": 1
+    },
+    "KeyError": {
+      "ENV_DEPENDENCY": 1,
+      "CONTEXT_LIMIT": 1
+    },
+    "ModuleNotFoundError": {
+      "CODE_RUNTIME": 1
+    },
+    "NameResolutionError": {
+      "NETWORK_API": 1,
+      "ENV_DEPENDENCY": 1
+    },
+    "PluginNotFound": {
+      "CODE_RUNTIME": 1
+    },
+    "ProxyError": {
+      "NETWORK_API": 1,
+      "ENV_DEPENDENCY": 1
+    },
+    "ReadError": {
+      "CONTEXT_LIMIT": 2
+    },
+    "ReadTimeout": {
+      "CODE_RUNTIME": 1,
+      "NETWORK_API": 1
+    },
+    "RecursionError": {
+      "CONTEXT_LIMIT": 1
+    },
+    "RemoteProtocolError": {
+      "ENV_DEPENDENCY": 1,
+      "NETWORK_API": 1,
+      "CONTEXT_LIMIT": 1,
+      "CODE_RUNTIME": 1
+    },
+    "RequestSizeError": {
+      "ENV_DEPENDENCY": 1
+    },
+    "RetryError": {
+      "NETWORK_API": 1
+    },
+    "RuntimeError": {
+      "ENV_DEPENDENCY": 1
+    },
+    "StreamProtocolError": {
+      "NETWORK_API": 1
+    },
+    "TimeoutError": {
+      "CODE_RUNTIME": 2,
+      "NETWORK_API": 1,
+      "CONTEXT_LIMIT": 1
+    },
+    "ToolExecutionError": {
+      "CONTEXT_LIMIT": 1
+    },
+    "TypeError": {
+      "CODE_RUNTIME": 1,
+      "ENV_DEPENDENCY": 1
+    },
+    "ValidationError": {
+      "CONTEXT_LIMIT": 1,
+      "NETWORK_API": 1,
+      "ENV_DEPENDENCY": 1
+    },
+    "WriteError": {
+      "NETWORK_API": 1
+    }
+  },
+  "samples": [
+    {
+      "id": "T001",
+      "design_id": "E-R-03",
+      "label": "ENV_DEPENDENCY",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [],
+      "exception_names": [
+        "KeyError"
+      ],
+      "n_chars": 647,
+      "n_lines": 7
+    },
+    {
+      "id": "T002",
+      "design_id": "R-C-03",
+      "label": "CODE_RUNTIME",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [
+        "contextlimiterror",
+        "contextlimiterror request"
+      ],
+      "exception_names": [
+        "ContextLimitError"
+      ],
+      "n_chars": 618,
+      "n_lines": 7
+    },
+    {
+      "id": "T003",
+      "design_id": "N-C-04",
+      "label": "NETWORK_API",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [
+        "replay ingress"
+      ],
+      "exception_names": [
+        "GatewayTimeout"
+      ],
+      "n_chars": 716,
+      "n_lines": 7
+    },
+    {
+      "id": "T004",
+      "design_id": "C-E-05",
+      "label": "CONTEXT_LIMIT",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [
+        "capacity",
+        "compact",
+        "request_parsed",
+        "sequence_admission"
+      ],
+      "exception_names": [],
+      "n_chars": 685,
+      "n_lines": 6
+    },
+    {
+      "id": "T005",
+      "design_id": "R-C-05",
+      "label": "CODE_RUNTIME",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [
+        "contextlimiterror",
+        "contextlimiterror request",
+        "provider_request_id"
+      ],
+      "exception_names": [
+        "ContextLimitError"
+      ],
+      "n_chars": 596,
+      "n_lines": 7
+    },
+    {
+      "id": "T006",
+      "design_id": "C-E-03",
+      "label": "CONTEXT_LIMIT",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [
+        "capacity",
+        "limit_entry",
+        "assembled_units",
+        "failed_before_inference"
+      ],
+      "exception_names": [],
+      "n_chars": 598,
+      "n_lines": 7
+    },
+    {
+      "id": "T007",
+      "design_id": "R-E-03",
+      "label": "CODE_RUNTIME",
+      "existing_review_flags": [
+        "check_single_line_shortcut"
+      ],
+      "class_exclusive_repeated_terms": [
+        "installation",
+        "installed"
+      ],
+      "exception_names": [],
+      "n_chars": 617,
+      "n_lines": 7
+    },
+    {
+      "id": "T008",
+      "design_id": "E-N-02",
+      "label": "ENV_DEPENDENCY",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [],
+      "exception_names": [
+        "RemoteProtocolError"
+      ],
+      "n_chars": 717,
+      "n_lines": 8
+    },
+    {
+      "id": "T009",
+      "design_id": "E-N-01",
+      "label": "ENV_DEPENDENCY",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [],
+      "exception_names": [
+        "ConnectionError"
+      ],
+      "n_chars": 499,
+      "n_lines": 6
+    },
+    {
+      "id": "T010",
+      "design_id": "R-E-04",
+      "label": "CODE_RUNTIME",
+      "existing_review_flags": [
+        "check_pair_single_line_shortcut"
+      ],
+      "class_exclusive_repeated_terms": [
+        "installed"
+      ],
+      "exception_names": [
+        "TypeError"
+      ],
+      "n_chars": 532,
+      "n_lines": 8
+    },
+    {
+      "id": "T011",
+      "design_id": "C-N-03",
+      "label": "CONTEXT_LIMIT",
+      "existing_review_flags": [
+        "challenge_strength_independent_review_pending"
+      ],
+      "class_exclusive_repeated_terms": [
+        "generation_reservation",
+        "unrelated"
+      ],
+      "exception_names": [],
+      "n_chars": 1004,
+      "n_lines": 10
+    },
+    {
+      "id": "T012",
+      "design_id": "R-N-05",
+      "label": "CODE_RUNTIME",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [],
+      "exception_names": [
+        "TimeoutError"
+      ],
+      "n_chars": 487,
+      "n_lines": 6
+    },
+    {
+      "id": "T013",
+      "design_id": "C-C-05",
+      "label": "CONTEXT_LIMIT",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [
+        "capacity",
+        "history_summary"
+      ],
+      "exception_names": [
+        "RecursionError"
+      ],
+      "n_chars": 613,
+      "n_lines": 7
+    },
+    {
+      "id": "T014",
+      "design_id": "N-R-05",
+      "label": "NETWORK_API",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [
+        "provider request"
+      ],
+      "exception_names": [
+        "TimeoutError"
+      ],
+      "n_chars": 387,
+      "n_lines": 5
+    },
+    {
+      "id": "T015",
+      "design_id": "C-E-02",
+      "label": "CONTEXT_LIMIT",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [
+        "capacity",
+        "failed_before_inference",
+        "request_parsed",
+        "sequence_admission"
+      ],
+      "exception_names": [],
+      "n_chars": 684,
+      "n_lines": 8
+    },
+    {
+      "id": "T016",
+      "design_id": "R-N-03",
+      "label": "CODE_RUNTIME",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [],
+      "exception_names": [],
+      "n_chars": 680,
+      "n_lines": 9
+    },
+    {
+      "id": "T017",
+      "design_id": "C-C-02",
+      "label": "CONTEXT_LIMIT",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [
+        "capacity",
+        "limit_entry",
+        "history_summary",
+        "total_sequence_capacity"
+      ],
+      "exception_names": [
+        "ValidationError"
+      ],
+      "n_chars": 615,
+      "n_lines": 7
+    },
+    {
+      "id": "T018",
+      "design_id": "C-C-03",
+      "label": "CONTEXT_LIMIT",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [
+        "capacity",
+        "limit_entry",
+        "total_sequence_capacity",
+        "generation_reservation"
+      ],
+      "exception_names": [
+        "ToolExecutionError"
+      ],
+      "n_chars": 741,
+      "n_lines": 8
+    },
+    {
+      "id": "T019",
+      "design_id": "R-N-01",
+      "label": "CODE_RUNTIME",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [],
+      "exception_names": [
+        "TimeoutError"
+      ],
+      "n_chars": 533,
+      "n_lines": 7
+    },
+    {
+      "id": "T020",
+      "design_id": "N-R-01",
+      "label": "NETWORK_API",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [
+        "close_reason"
+      ],
+      "exception_names": [
+        "JSONDecodeError"
+      ],
+      "n_chars": 578,
+      "n_lines": 8
+    },
+    {
+      "id": "T021",
+      "design_id": "C-E-01",
+      "label": "CONTEXT_LIMIT",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [
+        "capacity",
+        "assembled_units",
+        "compact",
+        "generation_reservation"
+      ],
+      "exception_names": [],
+      "n_chars": 625,
+      "n_lines": 9
+    },
+    {
+      "id": "T022",
+      "design_id": "C-N-04",
+      "label": "CONTEXT_LIMIT",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [
+        "capacity",
+        "compact",
+        "unrelated"
+      ],
+      "exception_names": [
+        "ReadError"
+      ],
+      "n_chars": 726,
+      "n_lines": 7
+    },
+    {
+      "id": "T023",
+      "design_id": "C-C-01",
+      "label": "CONTEXT_LIMIT",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [
+        "capacity",
+        "limit_entry",
+        "history_summary",
+        "total_sequence_capacity"
+      ],
+      "exception_names": [
+        "KeyError"
+      ],
+      "n_chars": 678,
+      "n_lines": 8
+    },
+    {
+      "id": "T024",
+      "design_id": "N-C-05",
+      "label": "NETWORK_API",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [],
+      "exception_names": [
+        "WriteError"
+      ],
+      "n_chars": 556,
+      "n_lines": 6
+    },
+    {
+      "id": "T025",
+      "design_id": "C-E-04",
+      "label": "CONTEXT_LIMIT",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [
+        "capacity",
+        "limit_entry",
+        "failed_before_inference",
+        "response_schema"
+      ],
+      "exception_names": [
+        "ReadError"
+      ],
+      "n_chars": 568,
+      "n_lines": 8
+    },
+    {
+      "id": "T026",
+      "design_id": "N-C-03",
+      "label": "NETWORK_API",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [
+        "provider request",
+        "replay ingress"
+      ],
+      "exception_names": [],
+      "n_chars": 604,
+      "n_lines": 7
+    },
+    {
+      "id": "T027",
+      "design_id": "E-N-05",
+      "label": "ENV_DEPENDENCY",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [
+        "component"
+      ],
+      "exception_names": [
+        "ContentDecodingError"
+      ],
+      "n_chars": 605,
+      "n_lines": 9
+    },
+    {
+      "id": "T028",
+      "design_id": "C-C-04",
+      "label": "CONTEXT_LIMIT",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [
+        "capacity",
+        "history_summary",
+        "assembled_units",
+        "compact",
+        "request_parsed",
+        "response_schema",
+        "sequence_admission"
+      ],
+      "exception_names": [
+        "TimeoutError",
+        "TimeoutError"
+      ],
+      "n_chars": 708,
+      "n_lines": 6
+    },
+    {
+      "id": "T029",
+      "design_id": "R-E-05",
+      "label": "CODE_RUNTIME",
+      "existing_review_flags": [
+        "check_single_line_shortcut"
+      ],
+      "class_exclusive_repeated_terms": [
+        "installation"
+      ],
+      "exception_names": [
+        "ImportError"
+      ],
+      "n_chars": 609,
+      "n_lines": 7
+    },
+    {
+      "id": "T030",
+      "design_id": "N-E-01",
+      "label": "NETWORK_API",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [],
+      "exception_names": [
+        "ConnectionError",
+        "ConnectionError"
+      ],
+      "n_chars": 598,
+      "n_lines": 6
+    },
+    {
+      "id": "T031",
+      "design_id": "N-E-04",
+      "label": "NETWORK_API",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [],
+      "exception_names": [],
+      "n_chars": 575,
+      "n_lines": 9
+    },
+    {
+      "id": "T032",
+      "design_id": "N-R-03",
+      "label": "NETWORK_API",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [],
+      "exception_names": [
+        "ValidationError"
+      ],
+      "n_chars": 518,
+      "n_lines": 7
+    },
+    {
+      "id": "T033",
+      "design_id": "N-E-02",
+      "label": "NETWORK_API",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [
+        "provider request"
+      ],
+      "exception_names": [
+        "ProxyError"
+      ],
+      "n_chars": 593,
+      "n_lines": 6
+    },
+    {
+      "id": "T034",
+      "design_id": "N-C-01",
+      "label": "NETWORK_API",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [
+        "close_reason"
+      ],
+      "exception_names": [
+        "RemoteProtocolError"
+      ],
+      "n_chars": 628,
+      "n_lines": 8
+    },
+    {
+      "id": "T035",
+      "design_id": "E-C-05",
+      "label": "ENV_DEPENDENCY",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [],
+      "exception_names": [],
+      "n_chars": 680,
+      "n_lines": 6
+    },
+    {
+      "id": "T036",
+      "design_id": "E-R-04",
+      "label": "ENV_DEPENDENCY",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [],
+      "exception_names": [
+        "RuntimeError"
+      ],
+      "n_chars": 719,
+      "n_lines": 9
+    },
+    {
+      "id": "T037",
+      "design_id": "E-C-03",
+      "label": "ENV_DEPENDENCY",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [
+        "dispatch",
+        "provider diagnostic"
+      ],
+      "exception_names": [],
+      "n_chars": 658,
+      "n_lines": 7
+    },
+    {
+      "id": "T038",
+      "design_id": "R-E-02",
+      "label": "CODE_RUNTIME",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [],
+      "exception_names": [
+        "PluginNotFound"
+      ],
+      "n_chars": 513,
+      "n_lines": 6
+    },
+    {
+      "id": "T039",
+      "design_id": "N-E-03",
+      "label": "NETWORK_API",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [
+        "provider request"
+      ],
+      "exception_names": [
+        "NameResolutionError",
+        "NameResolutionError"
+      ],
+      "n_chars": 354,
+      "n_lines": 5
+    },
+    {
+      "id": "T040",
+      "design_id": "R-N-04",
+      "label": "CODE_RUNTIME",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [],
+      "exception_names": [
+        "ReadTimeout"
+      ],
+      "n_chars": 751,
+      "n_lines": 10
+    },
+    {
+      "id": "T041",
+      "design_id": "R-C-02",
+      "label": "CODE_RUNTIME",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [
+        "contextlimiterror",
+        "contextlimiterror request",
+        "provider_request_id"
+      ],
+      "exception_names": [
+        "ContextLimitError"
+      ],
+      "n_chars": 693,
+      "n_lines": 9
+    },
+    {
+      "id": "T042",
+      "design_id": "C-N-05",
+      "label": "CONTEXT_LIMIT",
+      "existing_review_flags": [
+        "challenge_strength_independent_review_pending"
+      ],
+      "class_exclusive_repeated_terms": [],
+      "exception_names": [
+        "ConnectionResetError"
+      ],
+      "n_chars": 972,
+      "n_lines": 10
+    },
+    {
+      "id": "T043",
+      "design_id": "E-R-02",
+      "label": "ENV_DEPENDENCY",
+      "existing_review_flags": [
+        "check_pair_single_line_shortcut"
+      ],
+      "class_exclusive_repeated_terms": [
+        "component",
+        "component contract",
+        "expects"
+      ],
+      "exception_names": [
+        "TypeError"
+      ],
+      "n_chars": 609,
+      "n_lines": 7
+    },
+    {
+      "id": "T044",
+      "design_id": "C-N-02",
+      "label": "CONTEXT_LIMIT",
+      "existing_review_flags": [
+        "challenge_strength_independent_review_pending"
+      ],
+      "class_exclusive_repeated_terms": [
+        "unrelated"
+      ],
+      "exception_names": [
+        "BrokenPipeError",
+        "BrokenPipeError"
+      ],
+      "n_chars": 983,
+      "n_lines": 8
+    },
+    {
+      "id": "T045",
+      "design_id": "E-C-04",
+      "label": "ENV_DEPENDENCY",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [
+        "dispatch"
+      ],
+      "exception_names": [
+        "RequestSizeError"
+      ],
+      "n_chars": 772,
+      "n_lines": 8
+    },
+    {
+      "id": "T046",
+      "design_id": "R-C-04",
+      "label": "CODE_RUNTIME",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [
+        "contextlimiterror",
+        "provider_request_id"
+      ],
+      "exception_names": [
+        "ContextLimitError"
+      ],
+      "n_chars": 489,
+      "n_lines": 7
+    },
+    {
+      "id": "T047",
+      "design_id": "R-E-01",
+      "label": "CODE_RUNTIME",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [
+        "installation",
+        "installed"
+      ],
+      "exception_names": [
+        "ModuleNotFoundError"
+      ],
+      "n_chars": 616,
+      "n_lines": 7
+    },
+    {
+      "id": "T048",
+      "design_id": "E-C-02",
+      "label": "ENV_DEPENDENCY",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [
+        "component",
+        "component contract",
+        "expects",
+        "provider diagnostic"
+      ],
+      "exception_names": [],
+      "n_chars": 717,
+      "n_lines": 7
+    },
+    {
+      "id": "T049",
+      "design_id": "N-C-02",
+      "label": "NETWORK_API",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [
+        "replay ingress"
+      ],
+      "exception_names": [
+        "ReadTimeout"
+      ],
+      "n_chars": 651,
+      "n_lines": 8
+    },
+    {
+      "id": "T050",
+      "design_id": "R-C-01",
+      "label": "CODE_RUNTIME",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [],
+      "exception_names": [],
+      "n_chars": 706,
+      "n_lines": 8
+    },
+    {
+      "id": "T051",
+      "design_id": "C-N-01",
+      "label": "CONTEXT_LIMIT",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [
+        "capacity",
+        "total_sequence_capacity",
+        "compact",
+        "response_schema"
+      ],
+      "exception_names": [
+        "RemoteProtocolError"
+      ],
+      "n_chars": 735,
+      "n_lines": 9
+    },
+    {
+      "id": "T052",
+      "design_id": "E-N-03",
+      "label": "ENV_DEPENDENCY",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [],
+      "exception_names": [
+        "ProxyError"
+      ],
+      "n_chars": 540,
+      "n_lines": 6
+    },
+    {
+      "id": "T053",
+      "design_id": "E-C-01",
+      "label": "ENV_DEPENDENCY",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [
+        "component",
+        "dispatch",
+        "expects",
+        "provider diagnostic"
+      ],
+      "exception_names": [],
+      "n_chars": 953,
+      "n_lines": 8
+    },
+    {
+      "id": "T054",
+      "design_id": "N-R-04",
+      "label": "NETWORK_API",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [],
+      "exception_names": [
+        "RetryError"
+      ],
+      "n_chars": 507,
+      "n_lines": 7
+    },
+    {
+      "id": "T055",
+      "design_id": "E-R-05",
+      "label": "ENV_DEPENDENCY",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [
+        "component",
+        "component contract"
+      ],
+      "exception_names": [
+        "ValidationError"
+      ],
+      "n_chars": 562,
+      "n_lines": 7
+    },
+    {
+      "id": "T056",
+      "design_id": "E-R-01",
+      "label": "ENV_DEPENDENCY",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [
+        "dispatch"
+      ],
+      "exception_names": [
+        "AttributeError"
+      ],
+      "n_chars": 691,
+      "n_lines": 7
+    },
+    {
+      "id": "T057",
+      "design_id": "R-N-02",
+      "label": "CODE_RUNTIME",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [],
+      "exception_names": [
+        "RemoteProtocolError"
+      ],
+      "n_chars": 605,
+      "n_lines": 8
+    },
+    {
+      "id": "T058",
+      "design_id": "N-E-05",
+      "label": "NETWORK_API",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [],
+      "exception_names": [
+        "ContentDecodingError"
+      ],
+      "n_chars": 524,
+      "n_lines": 6
+    },
+    {
+      "id": "T059",
+      "design_id": "E-N-04",
+      "label": "ENV_DEPENDENCY",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [],
+      "exception_names": [
+        "NameResolutionError"
+      ],
+      "n_chars": 539,
+      "n_lines": 7
+    },
+    {
+      "id": "T060",
+      "design_id": "N-R-02",
+      "label": "NETWORK_API",
+      "existing_review_flags": [],
+      "class_exclusive_repeated_terms": [
+        "close_reason"
+      ],
+      "exception_names": [
+        "StreamProtocolError"
+      ],
+      "n_chars": 595,
+      "n_lines": 8
+    }
+  ],
+  "cautions": [
+    "Synthetic development candidates; no evidence of real-world generalization or difficulty.",
+    "Repeated CV min/max are split sensitivity, not statistical confidence intervals.",
+    "Leave-boundary-out measures domain shift and should NOT be compared directly to simple chance as leakage proof.",
+    "No result can establish unique GT, independent Challenge difficulty, or absence of semantic shortcuts.",
+    "Do not revise GT or repeatedly optimize surface text against these baselines."
+  ]
+}

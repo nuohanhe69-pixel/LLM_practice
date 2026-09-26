@@ -9,7 +9,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Protocol
 
-from llm_experiment.api_client import ProviderRequestError
+from llm_experiment.api_client import CompletionResult, ProviderRequestError
 from llm_experiment.config import ModelConfig
 from llm_experiment.constants import (
     ALLOWED_LABELS,
@@ -28,6 +28,9 @@ PREDICTION_FIELDS = (
     "run_id",
     "temperature",
     "raw_output",
+    "finish_reason",
+    "completion_tokens",
+    "reasoning_tokens",
     "prediction",
     "api_status",
     "api_error",
@@ -36,7 +39,7 @@ PREDICTION_FIELDS = (
 
 
 class CompletionClient(Protocol):
-    def complete(self, prompt: str) -> str: ...
+    def complete_with_metadata(self, prompt: str) -> CompletionResult: ...
 
 
 class PredictionStateError(ValueError):
@@ -52,6 +55,9 @@ class PredictionRecord:
     run_id: int
     temperature: float
     raw_output: str
+    finish_reason: str
+    completion_tokens: int | None
+    reasoning_tokens: int | None
     prediction: str
     api_status: str
     api_error: str
@@ -105,7 +111,7 @@ def run_predictions(
         prompt = render_prompt(prompt_type, sample, demos, prompt_dir=prompt_dir)
         started_at = time.perf_counter()
         try:
-            raw_output = client.complete(prompt)
+            result = client.complete_with_metadata(prompt)
             record = PredictionRecord(
                 sample_id=sample.id,
                 model=model_config.name,
@@ -113,8 +119,11 @@ def run_predictions(
                 prompt_type=prompt_type,
                 run_id=run_id,
                 temperature=model_config.temperature,
-                raw_output=raw_output,
-                prediction=normalize_prediction(raw_output),
+                raw_output=result.content,
+                finish_reason=result.finish_reason or "",
+                completion_tokens=result.completion_tokens,
+                reasoning_tokens=result.reasoning_tokens,
+                prediction=normalize_prediction(result.content),
                 api_status=API_STATUS_SUCCESS,
                 api_error="",
                 latency_seconds=time.perf_counter() - started_at,
@@ -128,6 +137,9 @@ def run_predictions(
                 run_id=run_id,
                 temperature=model_config.temperature,
                 raw_output="",
+                finish_reason="",
+                completion_tokens=None,
+                reasoning_tokens=None,
                 prediction="",
                 api_status=API_STATUS_FAILURE,
                 api_error=f"{type(exc).__name__}: {exc}",
@@ -173,6 +185,9 @@ def load_prediction_records(path: str | Path) -> list[PredictionRecord]:
                         run_id=int(row["run_id"]),
                         temperature=float(row["temperature"]),
                         raw_output=row["raw_output"],
+                        finish_reason=row["finish_reason"],
+                        completion_tokens=_parse_optional_tokens(row["completion_tokens"]),
+                        reasoning_tokens=_parse_optional_tokens(row["reasoning_tokens"]),
                         prediction=row["prediction"],
                         api_status=row["api_status"],
                         api_error=row["api_error"],
@@ -184,6 +199,15 @@ def load_prediction_records(path: str | Path) -> list[PredictionRecord]:
                     f"Invalid prediction checkpoint row {row_number}"
                 ) from exc
     return records
+
+
+def _parse_optional_tokens(value: str) -> int | None:
+    if value == "":
+        return None
+    tokens = int(value)
+    if tokens < 0:
+        raise ValueError("Token counts must be non-negative")
+    return tokens
 
 
 def _validate_checkpoint(
@@ -218,7 +242,13 @@ def _validate_checkpoint(
         if record.api_status == API_STATUS_SUCCESS:
             if record.prediction not in ALLOWED_LABELS | {INVALID_OUTPUT}:
                 raise PredictionStateError(f"Invalid prediction for {record.sample_id}")
-        elif record.prediction or not record.api_error:
+        elif (
+            record.prediction
+            or not record.api_error
+            or record.finish_reason
+            or record.completion_tokens is not None
+            or record.reasoning_tokens is not None
+        ):
             raise PredictionStateError(f"Invalid API failure record for {record.sample_id}")
 
 

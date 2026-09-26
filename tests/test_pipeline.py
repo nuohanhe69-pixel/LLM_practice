@@ -3,9 +3,35 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from llm_experiment.api_client import CompletionResult
 from llm_experiment.dataset import load_frozen_dataset
 from llm_experiment.pipeline import resolve_result_directory, run_experiment
 from tests.test_prediction import SequenceClient
+
+
+def test_pipeline_never_persists_reasoning_content(tmp_path):
+    config_path = write_model_config(tmp_path / "models.json")
+    private = "PRIVATE_REASONING_MUST_NOT_BE_PERSISTED"
+    result = run_experiment(
+        model_name="qwen_test",
+        prompt_type="zero_shot",
+        run_id=9002,
+        limit=2,
+        model_config_path=config_path,
+        results_root=tmp_path / "results",
+        client=SequenceClient(
+            [
+                CompletionResult("CONTEXT_LIMIT", private, "stop", 20, 16),
+                CompletionResult("", private + " NETWORK_API", "length", 19, 16),
+            ]
+        ),
+    )
+    assert result.metrics["successful_predictions"] == 2
+    assert result.metrics["invalid_outputs"] == 1
+    for path in (result.predictions_path, result.metrics_path, result.error_cases_path):
+        content = path.read_text(encoding="utf-8")
+        assert private not in content
+        assert "reasoning_content" not in content
 
 
 def write_model_config(path):

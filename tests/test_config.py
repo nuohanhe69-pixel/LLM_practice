@@ -152,7 +152,7 @@ def test_load_model_config_rejects_non_boolean_thinking(tmp_path, thinking):
         ("qwen3_7_plus", "qwen3.7-plus-2026-05-26"),
         ("glm_5", "glm-5"),
         ("deepseek_v4_pro", "deepseek-v4-pro"),
-        ("deepseek_v4_flash_0731", "deepseek-v4-flash-0731"),
+        ("deepseek_v4_1_flash", "deepseek-v4.1-flash"),
         ("kimi_k3", "kimi-k3"),
     ],
 )
@@ -163,6 +163,20 @@ def test_formal_model_protocol(key, api_model):
     assert config.enable_thinking is True
     assert config.max_tokens is None
     assert config.max_completion_tokens is None
+
+
+def test_formal_model_set_contains_exactly_the_five_final_models():
+    path = Path(__file__).resolve().parents[1] / "configs/models.json"
+    models = json.loads(path.read_text(encoding="utf-8"))["models"]
+    assert set(models) == {
+        "qwen3_7_plus",
+        "glm_5",
+        "deepseek_v4_pro",
+        "deepseek_v4_1_flash",
+        "kimi_k3",
+    }
+    with pytest.raises(ConfigurationError, match="Unknown model"):
+        load_model_config(path, "deepseek_v4_flash_0731", environ={})
 
 
 def test_load_model_config_rejects_an_unknown_model(tmp_path):

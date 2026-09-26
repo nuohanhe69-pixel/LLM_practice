@@ -132,7 +132,7 @@ def test_openai_compatible_client_omits_budget_and_respects_thinking(thinking):
         "qwen3_7_plus",
         "glm_5",
         "deepseek_v4_pro",
-        "deepseek_v4_flash_0731",
+        "deepseek_v4_1_flash",
         "kimi_k3",
     ],
 )

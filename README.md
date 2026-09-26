@@ -22,6 +22,8 @@ python -m pip install -e ".[dev]"
 
 ## API 配置
 
+正式五模型均显式开启 `enable_thinking=true`（通过 `extra_body` 发送），保留各模型默认 reasoning effort。不人为配置或发送 `max_tokens` / `max_completion_tokens`，使用 provider/model 默认最大输出长度。
+
 API Key 只从环境变量读取：
 
 ```bash

@@ -26,6 +26,7 @@ class ModelConfig:
     max_completion_tokens: int | None
     timeout_seconds: float
     max_retries: int
+    enable_thinking: bool | None = None
 
 
 def load_model_config(
@@ -66,10 +67,13 @@ def load_model_config(
     temperature = _required_number(raw, "temperature")
     max_tokens = _optional_integer(raw, "max_tokens", minimum=1)
     max_completion_tokens = _optional_integer(raw, "max_completion_tokens", minimum=1)
-    if (max_tokens is None) == (max_completion_tokens is None):
+    if max_tokens is not None and max_completion_tokens is not None:
         raise ConfigurationError(
-            "Exactly one of max_tokens or max_completion_tokens must be configured"
+            "At most one of max_tokens or max_completion_tokens may be configured"
         )
+    enable_thinking = raw.get("enable_thinking")
+    if "enable_thinking" in raw and not isinstance(enable_thinking, bool):
+        raise ConfigurationError("enable_thinking must be a boolean")
     timeout_seconds = _required_number(raw, "timeout_seconds")
     max_retries = _required_integer(raw, "max_retries", minimum=0)
     if not 0 <= temperature <= 2:
@@ -87,6 +91,7 @@ def load_model_config(
         max_completion_tokens=max_completion_tokens,
         timeout_seconds=float(timeout_seconds),
         max_retries=max_retries,
+        enable_thinking=enable_thinking,
     )
 
 

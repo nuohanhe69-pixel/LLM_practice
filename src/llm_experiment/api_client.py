@@ -46,17 +46,19 @@ class OpenAICompatibleClient:
     def complete_with_metadata(self, prompt: str) -> CompletionResult:
         # max_completion_tokens includes visible and reasoning tokens:
         # https://developers.openai.com/api/docs/guides/token-counting
-        generation_budget = (
-            {"max_tokens": self._config.max_tokens}
-            if self._config.max_tokens is not None
-            else {"max_completion_tokens": self._config.max_completion_tokens}
-        )
+        request_options: dict[str, Any] = {}
+        if self._config.max_tokens is not None:
+            request_options["max_tokens"] = self._config.max_tokens
+        elif self._config.max_completion_tokens is not None:
+            request_options["max_completion_tokens"] = self._config.max_completion_tokens
+        if self._config.enable_thinking is not None:
+            request_options["extra_body"] = {"enable_thinking": self._config.enable_thinking}
         try:
             response = self._sdk_client.chat.completions.create(
                 model=self._config.api_model,
                 messages=[{"role": "user", "content": prompt}],
                 temperature=self._config.temperature,
-                **generation_budget,
+                **request_options,
             )
         except APIConnectionError as exc:
             raise ProviderRequestError(f"{type(exc).__name__}: {exc}") from exc

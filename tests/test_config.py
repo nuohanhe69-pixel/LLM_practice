@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 
 import pytest
 
@@ -73,9 +74,9 @@ def test_load_model_config_accepts_max_completion_tokens(tmp_path):
 
 @pytest.mark.parametrize(
     "budget_fields",
-    [{}, {"max_tokens": 16, "max_completion_tokens": 2048}],
+    [{"max_tokens": 16, "max_completion_tokens": 2048}],
 )
-def test_load_model_config_requires_exactly_one_generation_budget(tmp_path, budget_fields):
+def test_load_model_config_rejects_two_generation_budgets(tmp_path, budget_fields):
     config_path = tmp_path / "models.json"
     config_path.write_text(
         json.dumps(
@@ -96,8 +97,72 @@ def test_load_model_config_requires_exactly_one_generation_budget(tmp_path, budg
         encoding="utf-8",
     )
 
-    with pytest.raises(ConfigurationError, match="Exactly one"):
+    with pytest.raises(ConfigurationError, match="At most one"):
         load_model_config(config_path, "test", environ={})
+
+
+@pytest.mark.parametrize("thinking", [None, True, False])
+def test_load_model_config_accepts_no_generation_cap(tmp_path, thinking):
+    raw = {
+        "api_model": "test",
+        "base_url": "https://default.example/v1",
+        "api_key_env": "TEST_API_KEY",
+        "temperature": 0,
+        "timeout_seconds": 5,
+        "max_retries": 1,
+    }
+    if thinking is not None:
+        raw["enable_thinking"] = thinking
+    config_path = tmp_path / "models.json"
+    config_path.write_text(json.dumps({"models": {"test": raw}}), encoding="utf-8")
+    config = load_model_config(config_path, "test", environ={})
+    assert config.max_tokens is None
+    assert config.max_completion_tokens is None
+    assert config.enable_thinking is thinking
+
+
+@pytest.mark.parametrize("thinking", [None, "true", 1, 0])
+def test_load_model_config_rejects_non_boolean_thinking(tmp_path, thinking):
+    config_path = tmp_path / "models.json"
+    config_path.write_text(
+        json.dumps(
+            {
+                "models": {
+                    "test": {
+                        "api_model": "test",
+                        "base_url": "https://default.example/v1",
+                        "api_key_env": "TEST_API_KEY",
+                        "temperature": 0,
+                        "timeout_seconds": 5,
+                        "max_retries": 1,
+                        "enable_thinking": thinking,
+                    }
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+    with pytest.raises(ConfigurationError, match="enable_thinking must be a boolean"):
+        load_model_config(config_path, "test", environ={})
+
+
+@pytest.mark.parametrize(
+    "key,api_model",
+    [
+        ("qwen3_7_plus", "qwen3.7-plus-2026-05-26"),
+        ("glm_5", "glm-5"),
+        ("deepseek_v4_pro", "deepseek-v4-pro"),
+        ("deepseek_v4_flash_0731", "deepseek-v4-flash-0731"),
+        ("kimi_k3", "kimi-k3"),
+    ],
+)
+def test_formal_model_protocol(key, api_model):
+    path = Path(__file__).resolve().parents[1] / "configs/models.json"
+    config = load_model_config(path, key, environ={})
+    assert config.api_model == api_model
+    assert config.enable_thinking is True
+    assert config.max_tokens is None
+    assert config.max_completion_tokens is None
 
 
 def test_load_model_config_rejects_an_unknown_model(tmp_path):

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from dataclasses import replace
+from pathlib import Path
 from types import SimpleNamespace
 
 import httpx2
@@ -14,7 +16,7 @@ from llm_experiment.api_client import (
     ProviderRequestError,
     build_openai_client,
 )
-from llm_experiment.config import ModelConfig
+from llm_experiment.config import ModelConfig, load_model_config
 
 
 def model_config() -> ModelConfig:
@@ -89,6 +91,81 @@ def test_openai_compatible_client_sends_configured_generation_parameters():
         "messages": [{"role": "user", "content": "classify this"}],
         "temperature": 0.0,
         "max_tokens": 8,
+    }
+
+
+@pytest.mark.parametrize("thinking", [None, True, False])
+def test_openai_compatible_client_omits_budget_and_respects_thinking(thinking):
+    captured = {}
+
+    def create(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(
+            choices=[
+                SimpleNamespace(
+                    message=SimpleNamespace(content="NETWORK_API"),
+                    finish_reason="stop",
+                )
+            ],
+            usage=None,
+        )
+
+    config = replace(model_config(), max_tokens=None, enable_thinking=thinking)
+    client = OpenAICompatibleClient(
+        config,
+        SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create))),
+    )
+    assert client.complete("classify this") == "NETWORK_API"
+    expected = {
+        "model": "qwen-test",
+        "messages": [{"role": "user", "content": "classify this"}],
+        "temperature": 0.0,
+    }
+    if thinking is not None:
+        expected["extra_body"] = {"enable_thinking": thinking}
+    assert captured == expected
+
+
+@pytest.mark.parametrize(
+    "key",
+    [
+        "qwen3_7_plus",
+        "glm_5",
+        "deepseek_v4_pro",
+        "deepseek_v4_flash_0731",
+        "kimi_k3",
+    ],
+)
+def test_formal_models_send_thinking_without_generation_cap(key):
+    captured = {}
+
+    def create(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(
+            choices=[
+                SimpleNamespace(
+                    message=SimpleNamespace(content="NETWORK_API"),
+                    finish_reason="stop",
+                )
+            ],
+            usage=None,
+        )
+
+    config = load_model_config(
+        Path(__file__).resolve().parents[1] / "configs/models.json",
+        key,
+        environ={},
+    )
+    client = OpenAICompatibleClient(
+        config,
+        SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create))),
+    )
+    client.complete("classify this")
+    assert captured == {
+        "model": config.api_model,
+        "messages": [{"role": "user", "content": "classify this"}],
+        "temperature": config.temperature,
+        "extra_body": {"enable_thinking": True},
     }
 
 

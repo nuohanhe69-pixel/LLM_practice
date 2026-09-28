@@ -7,7 +7,7 @@
       "api_key_env": "DASHSCOPE_API_KEY",
       "temperature": 0.0,
       "enable_thinking": true,
-      "timeout_seconds": 60.0,
+      "timeout_seconds": 300.0,
       "max_retries": 2
     },
     "glm_5": {
@@ -17,7 +17,7 @@
       "api_key_env": "DASHSCOPE_API_KEY",
       "temperature": 0.0,
       "enable_thinking": true,
-      "timeout_seconds": 60.0,
+      "timeout_seconds": 300.0,
       "max_retries": 2
     },
     "deepseek_v4_pro": {
@@ -27,7 +27,7 @@
       "api_key_env": "DASHSCOPE_API_KEY",
       "temperature": 0.0,
       "enable_thinking": true,
-      "timeout_seconds": 60.0,
+      "timeout_seconds": 300.0,
       "max_retries": 2
     },
     "deepseek_v4_1_flash": {
@@ -37,7 +37,7 @@
       "api_key_env": "DASHSCOPE_API_KEY",
       "temperature": 0.0,
       "enable_thinking": true,
-      "timeout_seconds": 60.0,
+      "timeout_seconds": 300.0,
       "max_retries": 2
     },
     "kimi_k3": {
@@ -47,7 +47,7 @@
       "api_key_env": "DASHSCOPE_API_KEY",
       "temperature": 0.0,
       "enable_thinking": true,
-      "timeout_seconds": 60.0,
+      "timeout_seconds": 300.0,
       "max_retries": 2
     }
   }

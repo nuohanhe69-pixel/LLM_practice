@@ -163,6 +163,7 @@ def test_formal_model_protocol(key, api_model):
     assert config.enable_thinking is True
     assert config.max_tokens is None
     assert config.max_completion_tokens is None
+    assert config.timeout_seconds == 300.0
 
 
 def test_formal_model_set_contains_exactly_the_five_final_models():

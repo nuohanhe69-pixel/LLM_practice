@@ -105,9 +105,17 @@ client.chat.completions.create(
 
 这是依据代码和冻结数据还原的 SDK 调用，不是从历史网络流量中抓取的请求报文。`extra_body` 是 SDK 的 provider 扩展参数入口；正式配置不传 `max_tokens`、`max_completion_tokens` 或 `reasoning_effort`。客户端另按[配置](../configs/models.json)设置 `timeout=300.0`、`max_retries=2`、百炼兼容端点及凭据；凭据不属于 Prompt，也不在此展示。Kimi 案例使用 `model="kimi-k3"`，其余上述请求协议一致。分类只使用返回的 `message.content`；完整 `reasoning_content` 未持久化，不能据本材料还原模型内部推理。
 
+### 1.5 ENV_DEPENDENCY 的标注口径与定义局限
+
+冻结 Prompt 对 ENV_DEPENDENCY 的原文为：“缺少包/模块/系统库、依赖版本不兼容、解释器/运行时版本不匹配或依赖解析失败。”[Dataset V2](../dataset_v2.csv)的 `label/reason/source_reference` 与[V4 设计元数据](../experiments/challenge_audit_v1/v4/candidates_full_v4.jsonl)表明，实际标注将**依赖组件之间的兼容性**也纳入该类：组件虽然都存在，但接口、字段协议或 Schema 契约无法互相满足，仍属于依赖组合不兼容，而不只是缺少安装包。例如 T055 的 producer 输出别名映射，旧 validator adapter 只读取实体化字段；其 `reason` 明确记为“跨 schema producer 与 validator adapter 的字段表示契约不一致造成后续 ValidationError。”这是该题归为 ENV_DEPENDENCY 的标注依据。
+
+这一区分取决于题面支持的主要故障位置：若证据指向跨组件契约失配，且匹配的组件组合能够完成处理，则按数据集口径归入 ENV_DEPENDENCY；若环境与依赖契约可用，故障来自应用自身参数、状态或值处理，则归入 CODE_RUNTIME。并非所有接口错误或 Schema 校验错误都归入 ENV_DEPENDENCY，最终异常名称本身不足以确定类别。
+
+**研究局限：** 原始 Prompt 提到了“依赖版本不兼容”，但没有显式说明跨组件接口、字段协议及 Schema 契约失配的适用范围，也没有充分展开其与 CODE_RUNTIME 的边界。因此，冻结标签定义对这类复杂依赖问题可能不够明确，数据集标注口径与模型获得的文字说明之间存在解释空间。这限制了对相关误判的归因：不能把全部差异都解释为模型根因推理能力不足，也不能认定定义不明确已被证实是误判原因。本节仅对既有标注作解释，不追溯修改冻结 Prompt 或 GT。
+
 ## 2. 两条完整错误案例
 
-下列“根因”是根据冻结数据标签和合成题面证据作出的解释，不是对生产事故的独立调查结论。预测表逐项核对原始 `raw_output`、`prediction` 及 Flip 配对结果；本节两条案例的原始可见输出与规范化标签一致。
+下列“根因”是根据冻结数据标签和合成题面证据作出的解释，不是对生产事故的独立调查结论。预测标签与翻转状态可通过仓库中已提交的[Flip 明细](../experiments/prediction_flip_analysis_v1/flip_details.csv)核查。原始 `raw_output`、`api_status` 和 `finish_reason` 则来自本地未纳入 Git 的 predictions.csv；本次已逐项核对，两条案例的原始可见输出与规范化标签一致。这些本地字段不能仅凭 GitHub 上的 Flip 文件独立验证。
 
 ### 2.1 Qwen 3.7 Plus：T019
 
@@ -130,7 +138,7 @@ scheduler patch trace: response callback processed before timer, task_state=comp
 | 1 | CODE_RUNTIME | NETWORK_API | CODE_RUNTIME | 正确→错误 |
 | 2 | CODE_RUNTIME | NETWORK_API | CODE_RUNTIME | 正确→错误 |
 
-来源：Qwen [Zero Run1](../results/qwen3_7_plus/zero_shot/run_1/predictions.csv)、[Zero Run2](../results/qwen3_7_plus/zero_shot/run_2/predictions.csv)、[Few Run1](../results/qwen3_7_plus/few_shot/run_1/predictions.csv)、[Few Run2](../results/qwen3_7_plus/few_shot/run_2/predictions.csv)中 T019 行，以及[Flip 明细](../experiments/prediction_flip_analysis_v1/flip_details.csv)。四次均为 API `SUCCESS`，`finish_reason=stop`；错误去向均命中该题的 `primary_distractor`。
+来源：[Flip 明细](../experiments/prediction_flip_analysis_v1/flip_details.csv)中 `model=qwen3_7_plus`、`sample_id=T019`、`run_id=1/2` 的两行，可核查预测标签、GT、干扰类及翻转状态；错误去向均命中该题的 `primary_distractor`。补充运行字段来自本地 `results/qwen3_7_plus/{zero_shot,few_shot}/run_{1,2}/predictions.csv` 的 T019 行：四次均为 API `SUCCESS`、`finish_reason=stop`。这四份原始 CSV 未纳入 Git，仅本地持有者能核查其原始输出和运行字段，故不提供 GitHub 文件链接。
 
 **证据支持的根因。** provider 已完成生成，edge 正常转发，client 在 deadline 前记录完整 EOF。响应回调已排队，却在 timeout 回调取消任务之后才执行，因此完成结果被本地取消状态丢弃。调整 scheduler 回调顺序后，任务完成且 timer 被跳过。按照题面的事件链和反事实修复，本地回调竞态是根因，最终 `TimeoutError` 是后果；网络交付失败不是这些记录支持的首要故障。
 
@@ -157,7 +165,7 @@ schema exchange manifest: sp18 outputs materialized canonical_id; sp24 outputs a
 | 1 | ENV_DEPENDENCY | CODE_RUNTIME | ENV_DEPENDENCY | 正确→错误 |
 | 2 | ENV_DEPENDENCY | CODE_RUNTIME | ENV_DEPENDENCY | 正确→错误 |
 
-来源：Kimi [Zero Run1](../results/kimi_k3/zero_shot/run_1/predictions.csv)、[Zero Run2](../results/kimi_k3/zero_shot/run_2/predictions.csv)、[Few Run1](../results/kimi_k3/few_shot/run_1/predictions.csv)、[Few Run2](../results/kimi_k3/few_shot/run_2/predictions.csv)中 T055 行，以及[Flip 明细](../experiments/prediction_flip_analysis_v1/flip_details.csv)。四次均为 API `SUCCESS`，`finish_reason=stop`；错误去向均命中该题预设干扰类。
+来源：[Flip 明细](../experiments/prediction_flip_analysis_v1/flip_details.csv)中 `model=kimi_k3`、`sample_id=T055`、`run_id=1/2` 的两行，可核查预测标签、GT、干扰类及翻转状态；错误去向均命中该题预设干扰类。补充运行字段来自本地 `results/kimi_k3/{zero_shot,few_shot}/run_{1,2}/predictions.csv` 的 T055 行：四次均为 API `SUCCESS`、`finish_reason=stop`。这四份原始 CSV 未纳入 Git，仅本地持有者能核查其原始输出和运行字段，故不提供 GitHub 文件链接。
 
 **证据支持的根因。** producer sp24 提供 `call_id` 和 `alias_map={call_id:id}`，而旧适配器 va18 只读取已经实体化的 canonical_id，不处理别名映射，最终导致 id 校验缺失。sp24+va24 组合可以完成校验，历史 sp18+va18 组合也正常；manifest 明确列出两代 producer 的表示方式差异。题面因此支持跨组件字段表示契约不兼容，对应 ENV_DEPENDENCY；`ValidationError` 是失配之后显现的校验症状，而非单凭异常类型就能认定的应用逻辑根因。
 
@@ -201,7 +209,7 @@ schema exchange manifest: sp18 outputs materialized canonical_id; sp24 outputs a
 | [prompts/](../prompts/) 与 [prompts.py](../src/llm_experiment/prompts.py) | 全部四个模板已核对。第 1 节使用现有 render_prompt() 还原，Few-shot 全量包含 8 Demo；两种条件使用相同 T019 输入。 |
 | [api_client.py](../src/llm_experiment/api_client.py) 与 [prediction.py](../src/llm_experiment/prediction.py) | 核对唯一 user 消息、请求参数和只从 content 分类；用本地 Fake SDK 捕获参数进行核查，没有构建真实远端请求。 |
 | [V4 元数据](../experiments/challenge_audit_v1/v4/candidates_full_v4.jsonl) | 核对两题 label、primary_distractor、evidence_pattern、design_reason 与 V2 一致的题面及根因解释。 |
-| 第 2 节所链接的 8 份原始 predictions.csv | 逐题核对 raw_output、prediction、模型名、Run、api_status 和 finish_reason，与 Flip 配对一致。 |
+| 第 2 节以本地路径注明的 8 份原始 predictions.csv（未纳入 Git） | 本次逐题核对 raw_output、prediction、模型名、Run、api_status 和 finish_reason。原始输出与运行字段仅能由本地文件独立核查；GitHub 上的 Flip 明细仅支持其已保存的预测标签、GT、干扰类、Run 与翻转状态。 |
 | [Flip 汇总](../experiments/prediction_flip_analysis_v1/flip_summary.csv)、[明细](../experiments/prediction_flip_analysis_v1/flip_details.csv)及[原分析报告](../experiments/prediction_flip_analysis_v1/report.md) | 两案例四个模型×Run 配对均为 correct_to_wrong；总体 54 次退化、23 次纠正，新增错误命中干扰类 44 次。 |
 
-所需数据和代码均可访问；本材料未新增实验。完整历史 HTTP 请求报文和完整模型 reasoning 文本不在上述预测 artifact 中，因此第 1 节是可复核的代码渲染还原，案例中的内部判断原因及两个方案的效果均尚待验证。所有解释以冻结的合成题面为边界，不宣称已经取得生产环境因果证据。
+本次核查所需数据和代码在当前工作区均可访问，但本地原始 predictions.csv 未上传 GitHub；仓库读者可沿 Flip 明细核查预测标签与翻转状态，不能据此核查未保存于该文件的原始输出和运行字段。本材料未新增实验。完整历史 HTTP 请求报文和完整模型 reasoning 文本不在上述预测 artifact 中，因此第 1 节是可复核的代码渲染还原，案例中的内部判断原因及两个方案的效果均尚待验证。所有解释以冻结的合成题面为边界，不宣称已经取得生产环境因果证据。
